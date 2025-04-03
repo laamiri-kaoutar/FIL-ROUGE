@@ -1,0 +1,30 @@
+/* Footer Styles */
+.footer-gradient {
+    background: linear-gradient(135deg, #1F1F35 0%, #2A1F3F 100%);
+}
+
+.footer-link {
+    transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+    color: #ffffff;
+}
+
+.footer-social-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    transition: opacity 0.2s ease;
+}
+
+.footer-social-icon:hover {
+    opacity: 0.8;
+}
+
+.footer-divider {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.footer-copyright {
+    color: rgba(255, 255, 255, 0.6);
+}

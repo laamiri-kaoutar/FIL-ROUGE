@@ -1,0 +1,33 @@
+:root {
+    --color-primary: #8A4FFF;
+    --color-secondary: #FF4F8A;
+    /* Add other variables */
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.primary-gradient {
+    background: linear-gradient(135deg, #8A4FFF 0%, #FF4F8A 100%);
+}
+
+.accent-gradient {
+    background: linear-gradient(135deg, #20E2D7 0%, #3047FF 100%);
+}
+
+
+
+/* Common animations */
+@keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 0.2; }
+}
+
+.animate-pulse {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.delay-700 {
+    animation-delay: 700ms;
+}
