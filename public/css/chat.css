@@ -1,0 +1,53 @@
+.message-sent {
+    background: var(--color-primary, #8A4FFF);
+    color: white;
+    border-radius: 1.25rem 1.25rem 0 1.25rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.message-received {
+    background-color: white;
+    border-radius: 1.25rem 1.25rem 1.25rem 0;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f3f4f6;
+}
+
+.conversation {
+    transition: all 0.2s ease;
+}
+
+.conversation:hover {
+    background-color: rgba(138, 79, 255, 0.05);
+}
+
+.conversation.active {
+    background-color: rgba(138, 79, 255, 0.1);
+    border-left: 4px solid var(--color-primary, #8A4FFF);
+}
+
+.unread-indicator {
+    background-color: var(--color-primary, #8A4FFF);
+}
+
+.chat-container {
+    background-image: linear-gradient(rgba(249, 250, 251, 0.8), rgba(249, 250, 251, 0.8)), 
+                      url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23f3f4f6' fill-opacity='0.5' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.chat-input:focus {
+    box-shadow: 0 0 0 3px rgba(138, 79, 255, 0.2);
+    outline: none;
+    border-color: var(--color-primary, #8A4FFF);
+}
+
+.send-button {
+    transition: transform 0.2s ease;
+}
+
+.send-button:hover {
+    transform: translateY(-1px);
+}
+
+.send-button:active {
+    transform: translateY(1px);
+}
