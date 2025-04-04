@@ -31,3 +31,8 @@ body {
 .delay-700 {
     animation-delay: 700ms;
 }
+
+aside {
+    height: 100vh; /* Full viewport height */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
