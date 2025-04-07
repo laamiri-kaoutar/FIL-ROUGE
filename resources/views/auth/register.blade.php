@@ -27,7 +27,6 @@
 
             <form action="{{ route('register') }}" method="POST" id="registerForm">
                 @csrf
-
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
                     <input id="name" name="name" type="text" required
@@ -77,6 +76,7 @@
                     Create Account
                 </button>
             </form>
+
 
             <div class="mt-6 text-center">
                 <p class="text-sm text-gray-600">
