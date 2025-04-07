@@ -1,4 +1,3 @@
-<!-- resources/views/auth/login.blade.php -->
 @extends('layouts.app')
 
 @section('title', 'FreelanceHub - Login')
@@ -10,15 +9,12 @@
 @section('content')
     <main class="min-h-screen py-16 px-4 sm:px-6 lg:px-8">
         <div class="max-w-md mx-auto">
-            <!-- Logo/Branding -->
             <div class="text-center">
                 <span class="text-3xl font-bold primary-gradient text-transparent bg-clip-text">FreelanceHub</span>
                 <h1 class="mt-6 text-2xl font-bold text-gray-900">Sign In to Your Account</h1>
             </div>
 
-            <!-- Auth Container -->
             <div class="mt-8 auth-container rounded-2xl p-8">
-                <!-- Login Form -->
                 <form action="{{ route('login') }}" method="POST" class="space-y-6">
                     @csrf
                     <div>
