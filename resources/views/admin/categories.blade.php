@@ -59,22 +59,36 @@
     <div id="categoryFormPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
         <div class="bg-white rounded-xl p-6 w-full max-w-md">
             <h3 class="text-lg font-semibold text-gray-800 mb-4">Add New Category</h3>
-            <form>
+    
+            <form action="{{ route('categories.store') }}" method="POST">
+                @csrf
+    
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Category Name</label>
-                    <input type="text" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500" placeholder="Enter category name" required>
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Category Name</label>
+                    <input type="text" name="name" id="name"
+                        class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        placeholder="Enter category name" required>
                 </div>
+    
                 <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                    <textarea class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500" rows="4" placeholder="Enter category description" required></textarea>
+                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea name="description" id="description"
+                        class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                        rows="4" placeholder="Enter category description" required></textarea>
                 </div>
+    
                 <div class="flex justify-end gap-3">
-                    <button type="button" id="closeFormBtn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700">Save</button>
+                    <button type="button" id="closeFormBtn"
+                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">Cancel</button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700">
+                        Save
+                    </button>
                 </div>
             </form>
         </div>
     </div>
+    
 
     <!-- Edit Category Popup -->
     <div id="editCategoryPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
