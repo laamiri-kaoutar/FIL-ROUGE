@@ -12,11 +12,27 @@
                 <p class="mt-2 text-sm text-gray-600">Enter your email address and we'll send you a link to reset your password.</p>
             </div>
             <div class="mt-8 auth-container rounded-2xl p-8">
-                @if (session('status'))
+                {{-- @if (session('status'))
                     <div class="mb-4 font-medium text-sm text-green-600">
                         {{ session('status') }}
                     </div>
-                @endif
+                @endif --}}
+
+                @if (session('status'))
+                <div class="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+                    {{ session('status') }}
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                    <ul class="list-disc pl-5 text-sm space-y-1">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
                 <form action="#" method="POST" class="space-y-6">
                     @csrf
