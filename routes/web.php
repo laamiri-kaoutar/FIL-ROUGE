@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CategoryController;
 
 Route::get('/', function () {
     // return view('welcome');
@@ -104,27 +106,29 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/account-validation', [AdminController::class, 'accountValidation'])->name('admin.account-validation');
 
-    Route::get('/categories', [AdminController::class, 'categories'])->name('admin.categories');
+    // Route::get('/categories', [AdminController::class, 'categories'])->name('admin.categories');
 
     Route::get('/signals', [AdminController::class, 'signals'])->name('admin.signals');
 
     Route::get('/services', [AdminController::class, 'services'])->name('admin.services');
+    Route::get('/orders', [AdminController::class, 'orders'])->name('admin.orders');
+
 
     Route::get('/transactions', [AdminController::class, 'transactions'])->name('admin.transactions');
 });
 
 
-Route::prefix('categories')->name('categories.')->group(function () {
-    Route::get('/', [CategoryController::class, 'index'])->name('index');
-    Route::post('/', [CategoryController::class, 'store'])->name('store');
-    // Route::get('/{id}/edit', [CategoryController::class, 'edit'])->name('edit');
-    Route::put('/{id}', [CategoryController::class, 'update'])->name('update');
-    Route::delete('/{id}', [CategoryController::class, 'destroy'])->name('destroy');
+Route::prefix('categories')->group(function () {
+    Route::get('/', [CategoryController::class, 'index'])->name('admin.categories');
+    Route::post('/', [CategoryController::class, 'store'])->name('categories.store');
+    Route::get('/{id}/edit', [CategoryController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 });
 
 
 Route::prefix('admin')->middleware(['auth'])->group(function () {
-    Route::get('/tags', [TagController::class, 'index'])->name('tags.index');
+    Route::get('/tags', [TagController::class, 'index'])->name('admin.tags');
 
     Route::post('/tags', [TagController::class, 'store'])->name('tags.store');
 

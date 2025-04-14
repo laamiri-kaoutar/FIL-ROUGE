@@ -35,7 +35,8 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $category = $this->categoryRepository->find($id);
-        return view('admin.categories.edit', compact('category'));
+        return $category;
+        // return view('admin.categories.edit', compact('category'));
     }
 
     public function update(Request $request, $id)

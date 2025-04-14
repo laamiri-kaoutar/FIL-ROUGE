@@ -26,19 +26,17 @@
                         <td class="py-4 px-4 text-gray-700">{{ $category->description }}</td>
                         <td class="py-4 px-4 flex gap-2">
                             <button class="editBtn px-3 py-1 text-sm text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200" 
-                                    data-id="{{ $category->id }}"
-                                    data-name="{{ $category->name }}"
-                                    data-description="{{ $category->description }}">
+                                    data-id="{{ $category->id }}">
                                 Edit
                             </button>
-                    
-                            <form action="{{ route('categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Are you sure?')">
+                            <form id="delete-form-{{ $category->id }}" action="{{ route('categories.destroy', $category->id) }}" method="POST" class="inline-block">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="px-3 py-1 text-sm text-red-600 bg-red-100 rounded-lg hover:bg-red-200">
+                                <button type="button" onclick="confirmDelete({{ $category->id }})" class="px-3 py-1 text-sm text-red-600 bg-red-100 rounded-lg hover:bg-red-200">
                                     Delete
                                 </button>
                             </form>
+                            
                         </td>
                     </tr>
                     @endforeach
@@ -133,11 +131,12 @@
                 editCategoryPopup.classList.remove('hidden');
             });
         });
+
         closeEditBtn.addEventListener('click', () => editCategoryPopup.classList.add('hidden'));
         editCategoryPopup.addEventListener('click', (e) => { if (e.target === editCategoryPopup) editCategoryPopup.classList.add('hidden'); });
 
         function fetchCategoryData(categoryId) {
-            fetch(`/admin/categories/${categoryId}`)
+            fetch(`categories/${categoryId}/edit`)
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('editCategoryId').value = categoryId;
@@ -151,5 +150,22 @@
                     document.getElementById('editCategoryDescription').value = 'Sample Description';
                 });
         }
+
+        function confirmDelete(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`delete-form-${id}`).submit();
+                }
+            });
+        }
+
     </script>
 @endsection
