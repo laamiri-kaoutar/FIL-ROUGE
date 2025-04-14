@@ -92,7 +92,10 @@
     <div id="editCategoryPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
         <div class="bg-white rounded-xl p-6 w-full max-w-md">
             <h3 class="text-lg font-semibold text-gray-800 mb-4">Edit Category</h3>
-            <form id="editCategoryForm">
+            <form id="edit-category-form" method="POST">
+                @csrf
+                @method('PUT')
+
                 <input type="hidden" name="category_id" id="editCategoryId">
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Category Name</label>
@@ -119,6 +122,8 @@
         const editButtons = document.querySelectorAll('.editBtn');
         const closeEditBtn = document.getElementById('closeEditBtn');
         const editCategoryPopup = document.getElementById('editCategoryPopup');
+        const editForm = document.getElementById('edit-category-form');
+
 
         openFormBtn.addEventListener('click', () => categoryFormPopup.classList.remove('hidden'));
         closeFormBtn.addEventListener('click', () => categoryFormPopup.classList.add('hidden'));
@@ -128,6 +133,12 @@
             button.addEventListener('click', () => {
                 const categoryId = button.getAttribute('data-id');
                 fetchCategoryData(categoryId);
+
+                const updateUrl = `/categories/${categoryId}`;
+                console.log(updateUrl);
+                
+                editForm.setAttribute('action', updateUrl);
+
                 editCategoryPopup.classList.remove('hidden');
             });
         });
