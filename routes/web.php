@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TagController;
 
 Route::get('/', function () {
     // return view('welcome');
@@ -99,22 +100,16 @@ Route::get('/freelancer/services/{id}/edit', function ($id) {
 
 // Admin Routes (prefix: /admin)
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
-    // Dashboard (Landing Page)
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
-    // Account Validation
     Route::get('/account-validation', [AdminController::class, 'accountValidation'])->name('admin.account-validation');
 
-    // Categories
     Route::get('/categories', [AdminController::class, 'categories'])->name('admin.categories');
 
-    // Signals (Reported Comments)
     Route::get('/signals', [AdminController::class, 'signals'])->name('admin.signals');
 
-    // Services
     Route::get('/services', [AdminController::class, 'services'])->name('admin.services');
 
-    // Transactions
     Route::get('/transactions', [AdminController::class, 'transactions'])->name('admin.transactions');
 });
 
@@ -127,7 +122,6 @@ Route::prefix('categories')->name('categories.')->group(function () {
     Route::delete('/{id}', [CategoryController::class, 'destroy'])->name('destroy');
 });
 
-use App\Http\Controllers\TagController;
 
 Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/tags', [TagController::class, 'index'])->name('tags.index');
