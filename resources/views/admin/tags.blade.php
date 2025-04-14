@@ -22,32 +22,30 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($tags as $tag)
                     <tr class="border-b border-gray-100 hover:bg-gray-50">
-                        <td class="py-4 px-4 text-gray-700">Urgent</td>
+                        <td class="py-4 px-4 text-gray-700">{{ $tag->tag_title }}</td>
                         <td class="py-4 px-4">
-                            <div class="flex items-center">
-                                <span class="w-4 h-4 rounded-full bg-red-500 mr-2"></span>
-                                <span class="text-gray-700">Red</span>
-                            </div>
+                            <span class="inline-block px-3 py-1 rounded-full text-white" style="background-color: {{ $tag->tag_color }};">
+                                {{ $tag->tag_color }}
+                            </span>
                         </td>
                         <td class="py-4 px-4 flex gap-2">
-                            <button class="px-3 py-1 text-sm text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200">Edit</button>
-                            <button class="px-3 py-1 text-sm text-red-600 bg-red-100 rounded-lg hover:bg-red-200">Delete</button>
+                            <button class="editBtn px-3 py-1 text-sm text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200"
+                                    data-id="{{ $tag->tag_id }}">
+                                Edit
+                            </button>
+                            <form id="delete-form-{{ $tag->tag_id }}" action="{{ route('tags.destroy', $tag->tag_id) }}" method="POST" class="inline-block">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button" onclick="confirmDelete({{ $tag->tag_id }})" class="px-3 py-1 text-sm text-red-600 bg-red-100 rounded-lg hover:bg-red-200">
+                                    Delete
+                                </button>
+                            </form>
                         </td>
                     </tr>
-                    <tr class="border-b border-gray-100 hover:bg-gray-50">
-                        <td class="py-4 px-4 text-gray-700">Featured</td>
-                        <td class="py-4 px-4">
-                            <div class="flex items-center">
-                                <span class="w-4 h-4 rounded-full bg-yellow-500 mr-2"></span>
-                                <span class="text-gray-700">Yellow</span>
-                            </div>
-                        </td>
-                        <td class="py-4 px-4 flex gap-2">
-                            <button class="px-3 py-1 text-sm text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200">Edit</button>
-                            <button class="px-3 py-1 text-sm text-red-600 bg-red-100 rounded-lg hover:bg-red-200">Delete</button>
-                        </td>
-                    </tr>
+                    @endforeach
+
                 </tbody>
             </table>
         </div>
