@@ -133,8 +133,6 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::post('/tags', [TagController::class, 'store'])->name('tags.store');
 
     Route::get('/tags/{tag}/edit', [TagController::class, 'edit'])->name('tags.edit');
-
     Route::put('/tags/{tag}', [TagController::class, 'update'])->name('tags.update');
-
     Route::delete('/tags/{tag}', [TagController::class, 'destroy'])->name('tags.destroy');
 });
