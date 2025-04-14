@@ -45,12 +45,10 @@
                         </td>
                     </tr>
                     @endforeach
-
                 </tbody>
             </table>
         </div>
 
-        <!-- Pagination -->
         <div class="mt-6 flex justify-center gap-3">
             <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100">Previous</button>
             <button class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg">1</button>
