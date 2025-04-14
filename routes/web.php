@@ -117,3 +117,26 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     // Transactions
     Route::get('/transactions', [AdminController::class, 'transactions'])->name('admin.transactions');
 });
+
+
+Route::prefix('categories')->name('categories.')->group(function () {
+    Route::get('/', [CategoryController::class, 'index'])->name('index');
+    Route::post('/', [CategoryController::class, 'store'])->name('store');
+    // Route::get('/{id}/edit', [CategoryController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [CategoryController::class, 'update'])->name('update');
+    Route::delete('/{id}', [CategoryController::class, 'destroy'])->name('destroy');
+});
+
+use App\Http\Controllers\TagController;
+
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    Route::get('/tags', [TagController::class, 'index'])->name('tags.index');
+
+    Route::post('/tags', [TagController::class, 'store'])->name('tags.store');
+
+    Route::get('/tags/{tag}/edit', [TagController::class, 'edit'])->name('tags.edit');
+
+    Route::put('/tags/{tag}', [TagController::class, 'update'])->name('tags.update');
+
+    Route::delete('/tags/{tag}', [TagController::class, 'destroy'])->name('tags.destroy');
+});

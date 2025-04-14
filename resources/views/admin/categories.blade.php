@@ -20,30 +20,30 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($categories as $category)
                     <tr class="border-b border-gray-100 hover:bg-gray-50">
-                        <td class="py-4 px-4 text-gray-700">Web Development</td>
-                        <td class="py-4 px-4 text-gray-700">Services related to website creation and maintenance</td>
+                        <td class="py-4 px-4 text-gray-700">{{ $category->name }}</td>
+                        <td class="py-4 px-4 text-gray-700">{{ $category->description }}</td>
                         <td class="py-4 px-4 flex gap-2">
-                            <button class="editBtn px-3 py-1 text-sm text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200" data-id="1">Edit</button>
-                            <button class="px-3 py-1 text-sm text-red-600 bg-red-100 rounded-lg hover:bg-red-200">Delete</button>
+                            <button class="editBtn px-3 py-1 text-sm text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200" 
+                                    data-id="{{ $category->id }}"
+                                    data-name="{{ $category->name }}"
+                                    data-description="{{ $category->description }}">
+                                Edit
+                            </button>
+                    
+                            <form action="{{ route('categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Are you sure?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="px-3 py-1 text-sm text-red-600 bg-red-100 rounded-lg hover:bg-red-200">
+                                    Delete
+                                </button>
+                            </form>
                         </td>
                     </tr>
-                    <tr class="border-b border-gray-100 hover:bg-gray-50">
-                        <td class="py-4 px-4 text-gray-700">Graphic Design</td>
-                        <td class="py-4 px-4 text-gray-700">Creative design services for logos, branding, etc.</td>
-                        <td class="py-4 px-4 flex gap-2">
-                            <button class="editBtn px-3 py-1 text-sm text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200" data-id="2">Edit</button>
-                            <button class="px-3 py-1 text-sm text-red-600 bg-red-100 rounded-lg hover:bg-red-200">Delete</button>
-                        </td>
-                    </tr>
-                    <tr class="border-b border-gray-100 hover:bg-gray-50">
-                        <td class="py-4 px-4 text-gray-700">Digital Marketing</td>
-                        <td class="py-4 px-4 text-gray-700">Marketing services including SEO and social media</td>
-                        <td class="py-4 px-4 flex gap-2">
-                            <button class="editBtn px-3 py-1 text-sm text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200" data-id="3">Edit</button>
-                            <button class="px-3 py-1 text-sm text-red-600 bg-red-100 rounded-lg hover:bg-red-200">Delete</button>
-                        </td>
-                    </tr>
+                    @endforeach
+
+              
                 </tbody>
             </table>
         </div>
