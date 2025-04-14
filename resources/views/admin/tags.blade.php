@@ -115,6 +115,7 @@
      
 @endsection
 
+
 @section('scripts')
     <script>
         const openFormBtn = document.getElementById('openFormBtn');
