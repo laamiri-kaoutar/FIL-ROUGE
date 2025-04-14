@@ -115,23 +115,66 @@
      
 @endsection
 @section('scripts')
-    <script>
-        const openFormBtn = document.getElementById('openFormBtn');
-        const closeFormBtn = document.getElementById('closeFormBtn');
-        const tagFormPopup = document.getElementById('tagFormPopup');
+<script>
+    const openFormBtn = document.getElementById('openFormBtn');
+    const closeFormBtn = document.getElementById('closeFormBtn');
+    const tagFormPopup = document.getElementById('tagFormPopup');
 
-        openFormBtn.addEventListener('click', () => {
-            tagFormPopup.classList.remove('hidden');
+    const editButtons = document.querySelectorAll('.editBtn');
+    const closeEditBtn = document.getElementById('closeEditBtn');
+    const editTagPopup = document.getElementById('editTagPopup');
+    const editForm = document.getElementById('edit-tag-form');
+
+    openFormBtn.addEventListener('click', () => tagFormPopup.classList.remove('hidden'));
+    closeFormBtn.addEventListener('click', () => tagFormPopup.classList.add('hidden'));
+    tagFormPopup.addEventListener('click', (e) => { if (e.target === tagFormPopup) tagFormPopup.classList.add('hidden'); });
+
+    editButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const tagId = button.getAttribute('data-id');
+            fetchTagData(tagId);
+
+            const updateUrl = `/tags/${tagId}`;
+            editForm.setAttribute('action', updateUrl);
+
+            editTagPopup.classList.remove('hidden');
         });
+    });
 
-        closeFormBtn.addEventListener('click', () => {
-            tagFormPopup.classList.add('hidden');
-        });
+    closeEditBtn.addEventListener('click', () => editTagPopup.classList.add('hidden'));
+    editTagPopup.addEventListener('click', (e) => { if (e.target === editTagPopup) editTagPopup.classList.add('hidden'); });
 
-        tagFormPopup.addEventListener('click', (e) => {
-            if (e.target === tagFormPopup) {
-                tagFormPopup.classList.add('hidden');
+    function fetchTagData(tagId) {
+        fetch(`/tags/${tagId}/edit`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('editTagId').value = tagId;
+                document.getElementById('editTagTitle').value = data.tag_title || '';
+                document.getElementById('editTagColor').value = data.tag_color || '#000000';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // fallback
+                document.getElementById('editTagTitle').value = 'Sample Tag';
+                document.getElementById('editTagColor').value = '#000000';
+            });
+    }
+
+    function confirmDelete(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won’t be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById(`delete-form-${id}`).submit();
             }
         });
-    </script>
+    }
+</script>
+
 @endsection
