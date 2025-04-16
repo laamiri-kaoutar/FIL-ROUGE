@@ -11,6 +11,8 @@
             <button id="openFormBtn" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700">Add Tag</button>
         </div>
 
+
+        
         <div class="overflow-x-auto">
             <table class="w-full text-left">
                 <thead>
