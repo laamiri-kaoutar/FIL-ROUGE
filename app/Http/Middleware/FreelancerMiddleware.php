@@ -13,8 +13,12 @@ class FreelancerMiddleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
-        return $next($request);
+        if (Auth::check() && Auth::user()->role->name === 'freelancer') {
+            return $next($request);
+        }
+
+        return redirect('/')->with('error', 'Access denied.');
     }
 }
