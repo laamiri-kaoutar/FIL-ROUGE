@@ -32,11 +32,6 @@ class TagController extends Controller
             'color' => 'required|string',
         ]);
 
-       
-        
-        // dd($validated);
-        // dd(",skskjkjdkjdkj");
-
         $data = $this->tagRepository->create($validated);
 
         // dd($data);
@@ -53,7 +48,6 @@ class TagController extends Controller
     public function edit($id)
     {
         $tag = $this->tagRepository->find($id);
-        // dd($tag);
         return $tag;
         // return view('admin.tags.edit', compact('tag'));
     }
