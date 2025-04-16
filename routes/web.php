@@ -102,7 +102,9 @@ Route::get('/freelancer/services/{id}/edit', function ($id) {
 
 // Admin Routes (prefix: /admin)
 Route::prefix('freelancer')->middleware(['auth', 'freelancer'])->group(function () {
-    Route::get('/freelancer/services/{id}/edit',[AdminController::class, 'ser'])->name('freelancer.service.edit');
+    Route::get('/freelancer/services/{id}/edit',[AdminController::class, 'edit'])->name('freelancer.service.edit');
+    Route::get('/freelancer/services', [AdminController::class, 'freelancerServices'])->name('freelancer.services');
+    
 
 });
 
