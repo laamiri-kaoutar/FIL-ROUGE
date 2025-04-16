@@ -35,13 +35,13 @@
                         <a href="#categories" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors duration-200">Categories</a>
                         <a href="#how-it-works" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors duration-200">How It Works</a>
                     @else
-                        @if (Auth::user()->role === 'client')
+                        @if (Auth::user()->role->name === 'client')
                             <!-- Client Links -->
                             <a href="{{ route('client.services') }}" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors duration-200 {{ request()->routeIs('client.services') ? 'active' : '' }}">Services</a>
                             <a href="{{ route('client.favorites') }}" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors duration-200 {{ request()->routeIs('client.favorites') ? 'active' : '' }}">Favorites</a>
                             <a href="{{ route('client.orders') }}" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors duration-200 {{ request()->routeIs('client.orders') ? 'active' : '' }}">Order History</a>
                             <a href="{{ route('client.reviews') }}" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors duration-200 {{ request()->routeIs('client.reviews') ? 'active' : '' }}">Reviews</a>
-                        @elseif (Auth::user()->role === 'freelancer')
+                        @elseif (Auth::user()->role->name === 'freelancer')
                             <!-- Freelancer Links -->
                             <a href="{{ route('freelancer.services') }}" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors duration-200 {{ request()->routeIs('freelancer.services') ? 'active' : '' }}">My Services</a>
                             <a href="{{ route('freelancer.orders') }}" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors duration-200 {{ request()->routeIs('freelancer.orders') ? 'active' : '' }}">Orders</a>
