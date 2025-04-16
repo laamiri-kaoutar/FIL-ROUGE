@@ -26,18 +26,22 @@ class TagController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request);
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'color' => 'required|string|regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/',
-        ], [
-            'name.required' => 'The tag name is required.',
-            'color.required' => 'The color is required.',
-            'color.regex' => 'The color must be a valid hex code (e.g., #FF0000).',
+            'color' => 'required|string',
         ]);
 
-        $this->tagRepository->create($validated);
+       
+        
+        // dd($validated);
+        // dd(",skskjkjdkjdkj");
 
-        return redirect()->route('tags.index')->with('success', 'Tag created successfully.');
+        $data = $this->tagRepository->create($validated);
+
+        // dd($data);
+
+        return redirect()->route('admin.tags')->with('success', 'Tag created successfully.');
     }
 
     public function show($id)
@@ -49,28 +53,26 @@ class TagController extends Controller
     public function edit($id)
     {
         $tag = $this->tagRepository->find($id);
-        return view('admin.tags.edit', compact('tag'));
+        // dd($tag);
+        return $tag;
+        // return view('admin.tags.edit', compact('tag'));
     }
 
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'color' => 'required|string|regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/',
-        ], [
-            'name.required' => 'The tag name is required.',
-            'color.required' => 'The color is required.',
-            'color.regex' => 'The color must be a valid hex code (e.g., #FF0000).',
+            'color' => 'required|string',
         ]);
 
         $this->tagRepository->update($id, $validated);
 
-        return redirect()->route('tags.index')->with('success', 'Tag updated successfully.');
+        return redirect()->route('admin.tags')->with('success', 'Tag updated successfully.');
     }
 
     public function destroy($id)
     {
         $this->tagRepository->delete($id);
-        return redirect()->route('tags.index')->with('success', 'Tag deleted successfully.');
+        return redirect()->route('admin.tags')->with('success', 'Tag deleted successfully.');
     }
 }

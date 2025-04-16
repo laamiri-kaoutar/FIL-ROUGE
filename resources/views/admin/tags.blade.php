@@ -11,7 +11,6 @@
             <button id="openFormBtn" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700">Add Tag</button>
         </div>
 
-        <!-- Tags Table -->
         <div class="overflow-x-auto">
             <table class="w-full text-left">
                 <thead>
@@ -24,21 +23,21 @@
                 <tbody>
                     @foreach ($tags as $tag)
                     <tr class="border-b border-gray-100 hover:bg-gray-50">
-                        <td class="py-4 px-4 text-gray-700">{{ $tag->tag_title }}</td>
+                        <td class="py-4 px-4 text-gray-700">{{ $tag->name }}</td>
                         <td class="py-4 px-4">
-                            <span class="inline-block px-3 py-1 rounded-full text-white" style="background-color: {{ $tag->tag_color }};">
-                                {{ $tag->tag_color }}
+                            <span class="inline-block px-3 py-1 rounded-full text-white" style="background-color: {{ $tag->color }};">
+                                {{ $tag->color }}
                             </span>
                         </td>
                         <td class="py-4 px-4 flex gap-2">
                             <button class="editBtn px-3 py-1 text-sm text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200"
-                                    data-id="{{ $tag->tag_id }}">
+                                    data-id="{{ $tag->id }}">
                                 Edit
                             </button>
-                            <form id="delete-form-{{ $tag->tag_id }}" action="{{ route('tags.destroy', $tag->tag_id) }}" method="POST" class="inline-block">
+                            <form id="delete-form-{{ $tag->id }}" action="{{ route('tags.destroy', $tag->id) }}" method="POST" class="inline-block">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" onclick="confirmDelete({{ $tag->tag_id }})" class="px-3 py-1 text-sm text-red-600 bg-red-100 rounded-lg hover:bg-red-200">
+                                <button type="button" onclick="confirmDelete({{ $tag->id }})" class="px-3 py-1 text-sm text-red-600 bg-red-100 rounded-lg hover:bg-red-200">
                                     Delete
                                 </button>
                             </form>
@@ -65,12 +64,12 @@
                 @csrf
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Tag Name</label>
-                    <input type="text" name="tag_title" class="w-full border border-gray-300 rounded-lg p-2" required>
+                    <input type="text" name="name" class="w-full border border-gray-300 rounded-lg p-2" required>
                 </div>
     
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Tag Color</label>
-                    <input type="color" name="tag_color" class="w-full border border-gray-300 rounded-lg p-2" required>
+                    <input type="color" name="color" class="w-full border border-gray-300 rounded-lg p-2" required>
                 </div>
     
                 <div class="flex justify-end gap-3">
@@ -91,16 +90,16 @@
                 @csrf
                 @method('PUT')
     
-                <input type="hidden" name="tag_id" id="editTagId">
+                <input type="hidden" name="id" id="editTagId">
     
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Tag Name</label>
-                    <input type="text" name="tag_title" id="editTagTitle" class="w-full border border-gray-300 rounded-lg p-2" required>
+                    <input type="text" name="name" id="editTagTitle" class="w-full border border-gray-300 rounded-lg p-2" required>
                 </div>
     
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Tag Color</label>
-                    <input type="color" name="tag_color" id="editTagColor" class="w-full border border-gray-300 rounded-lg p-2" required>
+                    <input type="color" name="color" id="editTagColor" class="w-full border border-gray-300 rounded-lg p-2" required>
                 </div>
     
                 <div class="flex justify-end gap-3">
@@ -145,12 +144,14 @@
     editTagPopup.addEventListener('click', (e) => { if (e.target === editTagPopup) editTagPopup.classList.add('hidden'); });
 
     function fetchTagData(tagId) {
-        fetch(`/tags/${tagId}/edit`)
+        // fetch(`categories/${categoryId}/edit`)
+
+        fetch(`tags/${tagId}/edit`)
             .then(response => response.json())
             .then(data => {
                 document.getElementById('editTagId').value = tagId;
-                document.getElementById('editTagTitle').value = data.tag_title || '';
-                document.getElementById('editTagColor').value = data.tag_color || '#000000';
+                document.getElementById('editTagTitle').value = data.name || '';
+                document.getElementById('editTagColor').value = data.color || '#000000';
             })
             .catch(error => {
                 console.error('Error:', error);

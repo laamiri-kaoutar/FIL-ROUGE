@@ -102,18 +102,13 @@ Route::get('/freelancer/services/{id}/edit', function ($id) {
 
 // Admin Routes (prefix: /admin)
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-
     Route::get('/account-validation', [AdminController::class, 'accountValidation'])->name('admin.account-validation');
-
     // Route::get('/categories', [AdminController::class, 'categories'])->name('admin.categories');
-
     Route::get('/signals', [AdminController::class, 'signals'])->name('admin.signals');
-
     Route::get('/services', [AdminController::class, 'services'])->name('admin.services');
     Route::get('/orders', [AdminController::class, 'orders'])->name('admin.orders');
-
-
     Route::get('/transactions', [AdminController::class, 'transactions'])->name('admin.transactions');
 });
 
@@ -126,13 +121,21 @@ Route::prefix('categories')->group(function () {
     Route::delete('/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 });
 
-
-Route::prefix('admin')->middleware(['auth'])->group(function () {
-    Route::get('/tags', [TagController::class, 'index'])->name('admin.tags');
-
-    Route::post('/tags', [TagController::class, 'store'])->name('tags.store');
-
-    Route::get('/tags/{tag}/edit', [TagController::class, 'edit'])->name('tags.edit');
-    Route::put('/tags/{tag}', [TagController::class, 'update'])->name('tags.update');
-    Route::delete('/tags/{tag}', [TagController::class, 'destroy'])->name('tags.destroy');
+Route::prefix('tags')->group(function () {
+    Route::get('/', [TagController::class, 'index'])->name('admin.tags');
+    Route::post('/', [TagController::class, 'store'])->name('tags.store');
+    Route::get('/{id}/edit', [TagController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [TagController::class, 'update'])->name('tags.update');
+    Route::delete('/{id}', [TagController::class, 'destroy'])->name('tags.destroy');
 });
+
+
+// Route::prefix('admin')->group(function () {
+//     Route::get('/tags', [TagController::class, 'index'])->name('admin.tags');
+
+//     Route::post('/tags', [TagController::class, 'store'])->name('tags.store');
+
+//     Route::get('/tags/${id}/edit',  [TagController::class, 'edit'])->name('tags.edit');
+//     Route::put('/tags/{tag}', [TagController::class, 'update'])->name('tags.update');
+//     Route::delete('/tags/{tag}', [TagController::class, 'destroy'])->name('tags.destroy');
+// });

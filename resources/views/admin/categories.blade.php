@@ -147,7 +147,7 @@
         editCategoryPopup.addEventListener('click', (e) => { if (e.target === editCategoryPopup) editCategoryPopup.classList.add('hidden'); });
 
         function fetchCategoryData(categoryId) {
-            fetch(`categories/${categoryId}/edit`)
+            fetch(`${categoryId}/edit`)
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('editCategoryId').value = categoryId;
