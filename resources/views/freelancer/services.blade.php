@@ -193,17 +193,24 @@
                 </div>
                 
                 <div class="p-6">
-                    <form id="serviceForm">
+                    <form id="serviceForm" action="{{ route('services.create') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
                         <!-- Service Details -->
                         <div class="space-y-6">
                             <div>
                                 <label for="serviceTitle" class="block text-sm font-medium text-gray-700">Service Title</label>
                                 <input type="text" id="serviceTitle" name="serviceTitle" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="e.g., Logo Design" required>
+                                @error('serviceTitle')
+                                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                                @enderror
                             </div>
                             
                             <div>
                                 <label for="serviceDescription" class="block text-sm font-medium text-gray-700">Description</label>
                                 <textarea id="serviceDescription" name="serviceDescription" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Describe your service in detail" required></textarea>
+                                @error('serviceDescription')
+                                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                                @enderror
                             </div>
                             
                             <div>
@@ -212,28 +219,36 @@
                                     <option value="active">Active</option>
                                     <option value="inactive">Inactive</option>
                                 </select>
+                                @error('serviceStatus')
+                                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                                @enderror
                             </div>
                             
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Tags</label>
                                 <div class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-40 overflow-y-auto p-2 border border-gray-300 rounded-md">
                                     @foreach ($tags as $tag)
-                                    <div class="flex items-center rounded-md"  >
-                                        <input type="checkbox" id="tag-{{ $tag->name }}" name="serviceTags[]" value="{{ $tag->id }}"  class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                        <label for="tag-{{ $tag->name }}"  style="background-color: {{ $tag->color }};" class="ml-2 text-sm rounded-md p-1 text-gray-700">{{ $tag->name }}</label>
-                                    </div>
+                                        <div class="flex items-center rounded-md">
+                                            <input type="checkbox" id="tag-{{ $tag->name }}" name="serviceTags[]" value="{{ $tag->id }}" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                            <label for="tag-{{ $tag->name }}" style="background-color: {{ $tag->color }};" class="ml-2 text-sm rounded-md p-1 text-gray-700">{{ $tag->name }}</label>
+                                        </div>
                                     @endforeach
-  
                                 </div>
+                                @error('serviceTags')
+                                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                                @enderror
                             </div>
                             
                             <div>
                                 <label for="serviceCategory" class="block text-sm font-medium text-gray-700">Category</label>
                                 <select id="serviceCategory" name="serviceCategory" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                                    @foreach ($categories as $categorie)
-                                    <option value=" {{ $categorie->id }}"> {{ $categorie->name }}</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
                                     @endforeach
                                 </select>
+                                @error('serviceCategory')
+                                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                                @enderror
                             </div>
                             
                             <div>
@@ -254,10 +269,13 @@
                                     <div id="imagePreview" class="mt-2 hidden">
                                         <img src="#" alt="Preview" class="max-h-40 rounded-md">
                                     </div>
+                                    @error('serviceImage')
+                                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
-        
+                
                         <!-- Service Packages -->
                         <div class="mt-6">
                             <div class="flex items-center justify-between mb-4">
@@ -281,6 +299,9 @@
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700">Package Name</label>
                                             <input type="text" name="packageName[]" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="e.g., Basic, Standard, Premium" required>
+                                            @error('packageName.*')
+                                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                                            @enderror
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700">Package Type</label>
@@ -289,24 +310,36 @@
                                                 <option value="standard">Standard</option>
                                                 <option value="premium">Premium</option>
                                             </select>
+                                            @error('packageType.*')
+                                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                                            @enderror
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700">Price ($)</label>
                                             <input type="number" name="packagePrice[]" min="1" step="0.01" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="e.g., 50.00" required>
+                                            @error('packagePrice.*')
+                                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                                            @enderror
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-700">Revisions</label>
                                             <input type="number" name="packageRevisions[]" min="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="e.g., 3" required>
+                                            @error('packageRevisions.*')
+                                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                                            @enderror
                                         </div>
                                         <div class="md:col-span-2">
                                             <label class="block text-sm font-medium text-gray-700">Delivery Time (days)</label>
                                             <input type="number" name="packageDeliveryTime[]" min="1" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="e.g., 3" required>
+                                            @error('packageDeliveryTime.*')
+                                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-        
+                
                         <!-- Form Actions -->
                         <div class="mt-6 flex justify-end space-x-3">
                             <button type="button" id="cancelBtn" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">

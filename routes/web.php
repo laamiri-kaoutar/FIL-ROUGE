@@ -105,6 +105,7 @@ Route::get('/freelancer/orders', function () {
 Route::prefix('freelancer')->middleware(['auth', 'freelancer'])->group(function () {
     Route::get('/services/{id}/edit',[ServiceController::class, 'edit'])->name('freelancer.service.edit');
     Route::get('/services', [ServiceController::class, 'freelancerServices'])->name('freelancer.services');
+    Route::post('/services', [ServiceController::class, 'create'])->name('services.create');
     
 
 });

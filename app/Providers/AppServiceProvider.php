@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use App\Interfaces\TagRepositoryInterface;
 use App\Repositories\TagRepository;
-use App\Interfaces\CategoryRepositoryInterface;
+use App\Repositories\ServiceRepository;
+use Illuminate\Support\ServiceProvider;
 use App\Repositories\CategoryRepository;
+use App\Interfaces\TagRepositoryInterface;
+use App\Interfaces\ServiceRepositoryInterface;
+use App\Interfaces\CategoryRepositoryInterface;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -18,6 +20,8 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(TagRepositoryInterface::class, TagRepository::class);
         $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);
+        $this->app->bind(ServiceRepositoryInterface::class, ServiceRepository::class);
+
 
     }
 
