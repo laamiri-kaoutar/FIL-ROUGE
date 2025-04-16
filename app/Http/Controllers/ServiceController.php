@@ -19,6 +19,8 @@ class ServiceController extends Controller
 
     public function freelancerServices(){
 
+
+        
         // $services = Service::where("user_id" , Auth::id())->get();
         $tags = Tag::all();
         // dd($tags);
