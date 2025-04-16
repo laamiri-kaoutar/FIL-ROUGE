@@ -217,60 +217,22 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Tags</label>
                                 <div class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-40 overflow-y-auto p-2 border border-gray-300 rounded-md">
-                                    <div class="flex items-center">
-                                        <input type="checkbox" id="tag-design" name="serviceTags[]" value="design" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                        <label for="tag-design" class="ml-2 text-sm text-gray-700">Design</label>
+                                    @foreach ($tags as $tag)
+                                    <div class="flex items-center rounded-md"  >
+                                        <input type="checkbox" id="tag-{{ $tag->name }}" name="serviceTags[]" value="{{ $tag->id }}"  class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                        <label for="tag-{{ $tag->name }}"  style="background-color: {{ $tag->color }};" class="ml-2 text-sm rounded-md p-1 text-gray-700">{{ $tag->name }}</label>
                                     </div>
-                                    <div class="flex items-center">
-                                        <input type="checkbox" id="tag-development" name="serviceTags[]" value="development" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                        <label for="tag-development" class="ml-2 text-sm text-gray-700">Development</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input type="checkbox" id="tag-writing" name="serviceTags[]" value="writing" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                        <label for="tag-writing" class="ml-2 text-sm text-gray-700">Writing</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input type="checkbox" id="tag-marketing" name="serviceTags[]" value="marketing" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                        <label for="tag-marketing" class="ml-2 text-sm text-gray-700">Marketing</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input type="checkbox" id="tag-seo" name="serviceTags[]" value="seo" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                        <label for="tag-seo" class="ml-2 text-sm text-gray-700">SEO</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input type="checkbox" id="tag-branding" name="serviceTags[]" value="branding" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                        <label for="tag-branding" class="ml-2 text-sm text-gray-700">Branding</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input type="checkbox" id="tag-web" name="serviceTags[]" value="web" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                        <label for="tag-web" class="ml-2 text-sm text-gray-700">Web</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input type="checkbox" id="tag-mobile" name="serviceTags[]" value="mobile" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                        <label for="tag-mobile" class="ml-2 text-sm text-gray-700">Mobile</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input type="checkbox" id="tag-video" name="serviceTags[]" value="video" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                        <label for="tag-video" class="ml-2 text-sm text-gray-700">Video</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input type="checkbox" id="tag-audio" name="serviceTags[]" value="audio" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                        <label for="tag-audio" class="ml-2 text-sm text-gray-700">Audio</label>
-                                    </div>
+                                    @endforeach
+  
                                 </div>
                             </div>
                             
                             <div>
                                 <label for="serviceCategory" class="block text-sm font-medium text-gray-700">Category</label>
                                 <select id="serviceCategory" name="serviceCategory" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                                    <option value="graphicsDesign">Graphics & Design</option>
-                                    <option value="digitalMarketing">Digital Marketing</option>
-                                    <option value="writingTranslation">Writing & Translation</option>
-                                    <option value="videoAnimation">Video & Animation</option>
-                                    <option value="musicAudio">Music & Audio</option>
-                                    <option value="programmingTech">Programming & Tech</option>
-                                    <option value="business">Business</option>
-                                    <option value="lifestyle">Lifestyle</option>
+                                    @foreach ($categories as $categorie)
+                                    <option value=" {{ $categorie->id }}"> {{ $categorie->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             

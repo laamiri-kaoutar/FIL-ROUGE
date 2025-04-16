@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\CategoryController;
 
 Route::get('/', function () {
@@ -87,23 +88,23 @@ Route::get('/freelancer/demands', function () {
     return view('freelancer.demands');
 })->name('freelancer.demands');
 
-Route::get('/freelancer/services', function () {
-    return view('freelancer.services');
-})->name('freelancer.services');
+// Route::get('/freelancer/services', function () {
+//     return view('freelancer.services');
+// })->name('freelancer.services');
 
 Route::get('/freelancer/orders', function () {
     return view('freelancer.orders');
 })->name('freelancer.orders');
 
-Route::get('/freelancer/services/{id}/edit', function ($id) {
-    return view('freelancer.service-edit');
-})->name('freelancer.service.edit');
+// Route::get('/freelancer/services/{id}/edit', function ($id) {
+//     return view('freelancer.service-edit');
+// })->name('freelancer.service.edit');
 
 
 // Admin Routes (prefix: /admin)
 Route::prefix('freelancer')->middleware(['auth', 'freelancer'])->group(function () {
-    Route::get('/freelancer/services/{id}/edit',[AdminController::class, 'edit'])->name('freelancer.service.edit');
-    Route::get('/freelancer/services', [AdminController::class, 'freelancerServices'])->name('freelancer.services');
+    Route::get('/services/{id}/edit',[ServiceController::class, 'edit'])->name('freelancer.service.edit');
+    Route::get('/services', [ServiceController::class, 'freelancerServices'])->name('freelancer.services');
     
 
 });
