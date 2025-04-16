@@ -101,6 +101,11 @@ Route::get('/freelancer/services/{id}/edit', function ($id) {
 
 
 // Admin Routes (prefix: /admin)
+Route::prefix('freelancer')->middleware(['auth', 'freelancer'])->group(function () {
+    Route::get('/freelancer/services/{id}/edit',[AdminController::class, 'ser'])->name('freelancer.service.edit');
+
+});
+
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
