@@ -6,6 +6,7 @@ use App\Models\Tag;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\CreateServiceRequest;
 use App\Interfaces\ServiceRepositoryInterface;
 
 class ServiceController extends Controller
@@ -33,39 +34,22 @@ class ServiceController extends Controller
     
        }
 
-    public function create(Request $request)
+    public function create(CreateServiceRequest $request)
     {
-        $validatedData = $request->validate([
-            'serviceTitle' => 'required|string|max:255',
-            'serviceDescription' => 'required|string',
-            'serviceStatus' => 'required|in:active,inactive',
-            'serviceCategory' => 'required|exists:categories,id',
-            'serviceTags' => 'required|array',
-            'serviceTags.*' => 'exists:tags,id',
-            'serviceImage' => 'nullable|image|max:5120', // 5MB max
-            'packageName' => 'required|array',
-            'packageName.*' => 'required|string|max:255',
-            'packageType' => 'required|array',
-            'packageType.*' => 'required|in:basic,standard,premium|distinct',
-            'packagePrice' => 'required|array',
-            'packagePrice.*' => 'required|numeric|min:0',
-            'packageRevisions' => 'required|array',
-            'packageRevisions.*' => 'required|integer|min:0',
-            'packageDeliveryTime' => 'required|array',
-            'packageDeliveryTime.*' => 'required|integer|min:1',
-        ]);
+
+        $validated = $request->validated();
 
         $serviceData = [
-            'title' => $validatedData['serviceTitle'],
-            'description' => $validatedData['serviceDescription'],
-            'status' => $validatedData['serviceStatus'],
+            'title' => $validated['serviceTitle'],
+            'description' => $validated['serviceDescription'],
+            'status' => $validated['serviceStatus'],
             'user_id' => Auth::id(),
-            'category_id' => $validatedData['serviceCategory'],
+            'category_id' => $validated['serviceCategory'],
         ];
 
         $service = $this->serviceRepository->create($serviceData);
 
-        $service->tags()->attach($validatedData['serviceTags']);
+        $service->tags()->attach($validated['serviceTags']);
 
         if ($request->hasFile('serviceImage')) {
             $imagePath = $request->file('serviceImage')->store('service_images', 'public');
@@ -74,19 +58,25 @@ class ServiceController extends Controller
                 'image_path' => $imagePath,
             ]);
         }
-
-        $packages = [];
-        foreach ($validatedData['packageName'] as $index => $name) {
-            $packages[] = [
-                'name' => $name,
-                'package_type' => $validatedData['packageType'][$index],
-                'price' => $validatedData['packagePrice'][$index],
-                // 'revisions' => $validatedData['packageRevisions'][$index],
-                'delivery_time' => $validatedData['packageDeliveryTime'][$index],
-            ];
-        }
-        $this->serviceRepository->addPackages($service->id, $packages);
+      
+        $this->createPackages($service->id, $validated);
 
         return redirect()->back()->with('success', 'Service created successfully!');
+    }
+
+    protected function createPackages(int $serviceId, array $validated): void
+    {
+        $packages = [];
+        foreach ($validated['packageName'] as $index => $name) {
+            $packages[] = [
+                'name' => $name,
+                'package_type' => $validated['packageType'][$index],
+                'price' => $validated['packagePrice'][$index],
+                // 'revisions' => $validated['packageRevisions'][$index],
+                'delivery_time' => $validated['packageDeliveryTime'][$index],
+            ];
+        }
+
+        $this->serviceRepository->addPackages($serviceId, $packages);
     }
 }

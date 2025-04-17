@@ -281,7 +281,6 @@
         const packagesContainer = document.getElementById('packagesContainer');
         const editServiceBtns = document.querySelectorAll('.edit-service-btn');
         
-        // Toggle modal visibility
         function toggleModal() {
             serviceModal.classList.toggle('hidden');
         }
