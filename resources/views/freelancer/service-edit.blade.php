@@ -412,10 +412,7 @@
                 document.getElementById('editPackageRevisions').value = packageRevisions;
                 document.getElementById('editPackageDelivery').value = packageDelivery;
             }
-        }
-
-
-        
+        }  
         // Toggle Add Feature Form
         let currentPackageId = null;
         function toggleAddFeatureForm(packageType = null, packageId = null) {
