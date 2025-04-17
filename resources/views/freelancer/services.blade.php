@@ -91,7 +91,7 @@
     @endforelse
 </div>
 
-        <!-- Create/Edit Service Modal -->
+        
         <div id="serviceModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
             <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-screen overflow-y-auto">
                 <div class="p-6 border-b border-gray-200">
@@ -271,7 +271,7 @@
 
 @section('scripts')
     <script>
-        // DOM elements
+        
         const createServiceBtn = document.getElementById('createServiceBtn');
         const serviceModal = document.getElementById('serviceModal');
         const closeModalBtn = document.getElementById('closeModalBtn');
