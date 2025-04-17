@@ -274,9 +274,6 @@
         </div>
     </main>
 @endsection
-
-
-
 @section('scripts')
     <script>
         
