@@ -213,25 +213,25 @@ class ServiceController extends Controller
         return redirect()->back()->with('success', 'Package deleted successfully!');
     }
 
-    public function addFeature(Request $request, $id, $packageId)
-    {
-        $service = $this->serviceRepository->find($id);
-        if ($service->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized');
-        }
+    // public function addFeature(Request $request, $id, $packageId)
+    // {
+    //     $service = $this->serviceRepository->find($id);
+    //     if ($service->user_id !== Auth::id()) {
+    //         abort(403, 'Unauthorized');
+    //     }
 
-        $validatedData = $request->validate([
-            'featureDescription' => 'required|string|max:255',
-            'featureIncluded' => 'boolean',
-        ]);
+    //     $validatedData = $request->validate([
+    //         'featureDescription' => 'required|string|max:255',
+    //         'featureIncluded' => 'boolean',
+    //     ]);
 
-        $this->serviceRepository->createFeature($packageId, [
-            'description' => $validatedData['featureDescription'],
-            'is_included' => $validatedData['featureIncluded'] ?? false,
-        ]);
+    //     $this->serviceRepository->createFeature($packageId, [
+    //         'description' => $validatedData['featureDescription'],
+    //         'is_included' => $validatedData['featureIncluded'] ?? false,
+    //     ]);
 
-        return redirect()->back()->with('success', 'Feature added successfully!');
-    }
+    //     return redirect()->back()->with('success', 'Feature added successfully!');
+    // }
 
     public function deleteFeature($id, $packageId, $featureId)
     {
