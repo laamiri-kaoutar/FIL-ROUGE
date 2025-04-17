@@ -275,6 +275,8 @@
     </main>
 @endsection
 
+
+
 @section('scripts')
     <script>
         
