@@ -55,7 +55,6 @@ class ServiceController extends Controller
             'packageDeliveryTime.*' => 'required|integer|min:1',
         ]);
 
-        // Prepare service data
         $serviceData = [
             'title' => $validatedData['serviceTitle'],
             'description' => $validatedData['serviceDescription'],
@@ -64,13 +63,10 @@ class ServiceController extends Controller
             'category_id' => $validatedData['serviceCategory'],
         ];
 
-        // Create the service
         $service = $this->serviceRepository->create($serviceData);
 
-        // Attach tags
         $service->tags()->attach($validatedData['serviceTags']);
 
-        // Handle image upload
         if ($request->hasFile('serviceImage')) {
             $imagePath = $request->file('serviceImage')->store('service_images', 'public');
             $this->serviceRepository->addImage($service->id, [
