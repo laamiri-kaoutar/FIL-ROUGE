@@ -92,7 +92,8 @@
 </div>
 
         
-        <div id="serviceModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+               <!-- Modal -->
+        <div id="serviceModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 {{ session('errors') ? '' : 'hidden' }}">
             <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-screen overflow-y-auto">
                 <div class="p-6 border-b border-gray-200">
                     <div class="flex justify-between items-center">
@@ -112,7 +113,7 @@
                         <div class="space-y-6">
                             <div>
                                 <label for="serviceTitle" class="block text-sm font-medium text-gray-700">Service Title</label>
-                                <input type="text" id="serviceTitle" name="serviceTitle" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="e.g., Logo Design" required>
+                                <input type="text" id="serviceTitle" name="serviceTitle" value="{{ old('serviceTitle') }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="e.g., Logo Design" required>
                                 @error('serviceTitle')
                                     <span class="text-red-500 text-sm">{{ $message }}</span>
                                 @enderror
@@ -120,7 +121,7 @@
                             
                             <div>
                                 <label for="serviceDescription" class="block text-sm font-medium text-gray-700">Description</label>
-                                <textarea id="serviceDescription" name="serviceDescription" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Describe your service in detail" required></textarea>
+                                <textarea id="serviceDescription" name="serviceDescription" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Describe your service in detail" required>{{ old('serviceDescription') }}</textarea>
                                 @error('serviceDescription')
                                     <span class="text-red-500 text-sm">{{ $message }}</span>
                                 @enderror
@@ -129,8 +130,8 @@
                             <div>
                                 <label for="serviceStatus" class="block text-sm font-medium text-gray-700">Status</label>
                                 <select id="serviceStatus" name="serviceStatus" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
+                                    <option value="active" {{ old('serviceStatus') == 'active' ? 'selected' : '' }}>Active</option>
+                                    <option value="inactive" {{ old('serviceStatus') == 'inactive' ? 'selected' : '' }}>Inactive</option>
                                 </select>
                                 @error('serviceStatus')
                                     <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -142,7 +143,7 @@
                                 <div class="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-40 overflow-y-auto p-2 border border-gray-300 rounded-md">
                                     @foreach ($tags as $tag)
                                         <div class="flex items-center rounded-md">
-                                            <input type="checkbox" id="tag-{{ $tag->name }}" name="serviceTags[]" value="{{ $tag->id }}" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                            <input type="checkbox" id="tag-{{ $tag->name }}" name="serviceTags[]" value="{{ $tag->id }}" {{ in_array($tag->id, old('serviceTags', [])) ? 'checked' : '' }} class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
                                             <label for="tag-{{ $tag->name }}" style="background-color: {{ $tag->color }};" class="ml-2 text-sm rounded-md p-1 text-gray-700">{{ $tag->name }}</label>
                                         </div>
                                     @endforeach
@@ -156,7 +157,7 @@
                                 <label for="serviceCategory" class="block text-sm font-medium text-gray-700">Category</label>
                                 <select id="serviceCategory" name="serviceCategory" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
                                     @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        <option value="{{ $category->id }}" {{ old('serviceCategory') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('serviceCategory')
@@ -188,7 +189,7 @@
                                 </div>
                             </div>
                         </div>
-                
+                        
                         <!-- Service Packages -->
                         <div class="mt-6">
                             <div class="flex items-center justify-between mb-4">
@@ -202,57 +203,62 @@
                             </div>
                             
                             <div id="packagesContainer" class="space-y-4">
-                                <div class="package-item bg-gray-50 p-4 rounded-md relative">
-                                    <button type="button" class="remove-package absolute top-2 right-2 text-gray-400 hover:text-gray-600">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </button>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700">Package Name</label>
-                                            <input type="text" name="packageName[]" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="e.g., Basic, Standard, Premium" required>
-                                            @error('packageName.*')
-                                                <span class="text-red-500 text-sm">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700">Package Type</label>
-                                            <select name="packageType[]" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                                                <option value="basic">Basic</option>
-                                                <option value="standard">Standard</option>
-                                                <option value="premium">Premium</option>
-                                            </select>
-                                            @error('packageType.*')
-                                                <span class="text-red-500 text-sm">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700">Price ($)</label>
-                                            <input type="number" name="packagePrice[]" min="1" step="0.01" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="e.g., 50.00" required>
-                                            @error('packagePrice.*')
-                                                <span class="text-red-500 text-sm">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700">Revisions</label>
-                                            <input type="number" name="packageRevisions[]" min="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="e.g., 3" required>
-                                            @error('packageRevisions.*')
-                                                <span class="text-red-500 text-sm">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="md:col-span-2">
-                                            <label class="block text-sm font-medium text-gray-700">Delivery Time (days)</label>
-                                            <input type="number" name="packageDeliveryTime[]" min="1" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="e.g., 3" required>
-                                            @error('packageDeliveryTime.*')
-                                                <span class="text-red-500 text-sm">{{ $message }}</span>
-                                            @enderror
+                                @php
+                                    $packageCount = old('packageName') ? count(old('packageName')) : 1;
+                                @endphp
+                                @for ($i = 0; $i < $packageCount; $i++)
+                                    <div class="package-item bg-gray-50 p-4 rounded-md relative">
+                                        <button type="button" class="remove-package absolute top-2 right-2 text-gray-400 hover:text-gray-600">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Package Name</label>
+                                                <input type="text" name="packageName[]" value="{{ old('packageName.'.$i) }}" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="e.g., Basic, Standard, Premium" required>
+                                                @error('packageName.'.$i)
+                                                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Package Type</label>
+                                                <select name="packageType[]" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                                                    <option value="basic" {{ old('packageType.'.$i) == 'basic' ? 'selected' : '' }}>Basic</option>
+                                                    <option value="standard" {{ old('packageType.'.$i) == 'standard' ? 'selected' : '' }}>Standard</option>
+                                                    <option value="premium" {{ old('packageType.'.$i) == 'premium' ? 'selected' : '' }}>Premium</option>
+                                                </select>
+                                                @error('packageType.'.$i)
+                                                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Price ($)</label>
+                                                <input type="number" name="packagePrice[]" value="{{ old('packagePrice.'.$i) }}" min="1" step="0.01" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="e.g., 50.00" required>
+                                                @error('packagePrice.'.$i)
+                                                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700">Revisions</label>
+                                                <input type="number" name="packageRevisions[]" value="{{ old('packageRevisions.'.$i) }}" min="0" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="e.g., 3" required>
+                                                @error('packageRevisions.'.$i)
+                                                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div class="md:col-span-2">
+                                                <label class="block text-sm font-medium text-gray-700">Delivery Time (days)</label>
+                                                <input type="number" name="packageDeliveryTime[]" value="{{ old('packageDeliveryTime.'.$i) }}" min="1" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="e.g., 3" required>
+                                                @error('packageDeliveryTime.'.$i)
+                                                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                                                @enderror
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endfor
                             </div>
                         </div>
-                
+                        
                         <!-- Form Actions -->
                         <div class="mt-6 flex justify-end space-x-3">
                             <button type="button" id="cancelBtn" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
