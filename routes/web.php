@@ -106,8 +106,14 @@ Route::prefix('freelancer')->middleware(['auth', 'freelancer'])->group(function 
     Route::get('/services/{id}/edit',[ServiceController::class, 'edit'])->name('freelancer.service.edit');
     Route::get('/services', [ServiceController::class, 'freelancerServices'])->name('freelancer.services');
     Route::post('/services', [ServiceController::class, 'create'])->name('services.create');
-    
-
+    Route::post('/services/{id}', [FreelancerController::class, 'update'])->name('services.update');
+    Route::post('/services/{id}/images', [FreelancerController::class, 'addImage'])->name('services.addImage');
+    Route::delete('/services/{id}/images/{imageId}', [FreelancerController::class, 'deleteImage'])->name('services.deleteImage');
+    Route::post('/services/{id}/packages', [FreelancerController::class, 'addPackage'])->name('services.addPackage');
+    Route::post('/services/{id}/packages/{packageId}', [FreelancerController::class, 'updatePackage'])->name('services.updatePackage');
+    Route::delete('/services/{id}/packages/{packageId}', [FreelancerController::class, 'deletePackage'])->name('services.deletePackage');
+    Route::post('/services/{id}/packages/{packageId}/features', [FreelancerController::class, 'addFeature'])->name('services.addFeature');
+    Route::delete('/services/{id}/packages/{packageId}/features/{featureId}', [FreelancerController::class, 'deleteFeature'])->name('services.deleteFeature');   
 });
 
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {

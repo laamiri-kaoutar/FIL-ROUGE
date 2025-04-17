@@ -10,6 +10,14 @@ interface ServiceRepositoryInterface
     public function find(int $id);
     public function all();
     public function getByUserId(int $userId);
-    public function update(int $id, array $data);
     public function delete(int $id);
+
+    // these are all for updating the srvice and it's related infos 
+    public function update(int $id, array $data);
+    public function deleteImage(int $imageId);
+    public function createPackage(int $serviceId, array $data);
+    public function updatePackage(int $packageId, array $data);
+    public function deletePackage(int $packageId);
+    public function createFeature(int $packageId, array $data);
+    public function deleteFeature(int $featureId);
 }

@@ -38,13 +38,6 @@ class ServiceRepository implements ServiceRepositoryInterface
         return Service::all();
     }
 
-    public function update(int $id, array $data)
-    {
-        $service = Service::findOrFail($id);
-        $service->update($data);
-        return $service;
-    }
-
     public function getByUserId(int $userId)
     {
         return Service::where('user_id', $userId)->with(['tags', 'category', 'images', 'packages'])->get();
@@ -54,5 +47,49 @@ class ServiceRepository implements ServiceRepositoryInterface
     {
         $service = Service::findOrFail($id);
         $service->delete();
+    }
+
+    public function update(int $id, array $data)
+    {
+        $service = Service::findOrFail($id);
+        $service->update($data);
+        return $service;
+    }
+
+    public function deleteImage(int $imageId)
+    {
+        $image = ServiceImage::findOrFail($imageId);
+        $image->delete();
+    }
+
+    public function createPackage(int $serviceId, array $data)
+    {
+        $data['service_id'] = $serviceId;
+        return ServicePackage::create($data);
+    }
+
+    public function updatePackage(int $packageId, array $data)
+    {
+        $package = ServicePackage::findOrFail($packageId);
+        $package->update($data);
+        return $package;
+    }
+
+    public function deletePackage(int $packageId)
+    {
+        $package = ServicePackage::findOrFail($packageId);
+        $package->delete();
+    }
+
+    public function createFeature(int $packageId, array $data)
+    {
+        $data['service_package_id'] = $packageId;
+        return Feature::create($data);
+    }
+
+    public function deleteFeature(int $featureId)
+    {
+        $feature = Feature::findOrFail($featureId);
+        $feature->delete();
     }
 }

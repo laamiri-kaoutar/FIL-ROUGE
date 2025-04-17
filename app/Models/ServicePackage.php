@@ -25,4 +25,9 @@ class ServicePackage extends Model
     {
         return $this->belongsTo(Service::class);
     }
+
+    public function features()
+    {
+        return $this->hasMany(Feature::class);
+    }
 }
