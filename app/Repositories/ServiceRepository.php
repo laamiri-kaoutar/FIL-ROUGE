@@ -45,6 +45,11 @@ class ServiceRepository implements ServiceRepositoryInterface
         return $service;
     }
 
+    public function getByUserId(int $userId)
+    {
+        return Service::where('user_id', $userId)->with(['tags', 'category', 'images', 'packages'])->get();
+    }
+
     public function delete(int $id)
     {
         $service = Service::findOrFail($id);

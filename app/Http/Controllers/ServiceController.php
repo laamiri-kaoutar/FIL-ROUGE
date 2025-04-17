@@ -17,16 +17,14 @@ class ServiceController extends Controller
         $this->serviceRepository = $serviceRepository;
     }
 
-    public function freelancerServices(){        
-        // $services = Service::where("user_id" , Auth::id())->get();
+    public function freelancerServices()
+    {
+        $services = $this->serviceRepository->all()->where('user_id', Auth::id());
         $tags = Tag::all();
-        // dd($tags);
-        $categories= Category::all();
-        // return view('freelancer.services');
+        $categories = Category::all();
     
-        return view('freelancer.services' , compact( 'tags', 'categories'));
-    
-       }
+        return view('freelancer.services', compact('services', 'tags', 'categories'));
+    }
     
        public function edit($id){
     
@@ -48,7 +46,7 @@ class ServiceController extends Controller
             'packageName' => 'required|array',
             'packageName.*' => 'required|string|max:255',
             'packageType' => 'required|array',
-            'packageType.*' => 'required|in:basic,standard,premium',
+            'packageType.*' => 'required|in:basic,standard,premium|distinct',
             'packagePrice' => 'required|array',
             'packagePrice.*' => 'required|numeric|min:0',
             'packageRevisions' => 'required|array',
@@ -81,14 +79,13 @@ class ServiceController extends Controller
             ]);
         }
 
-        // Handle packages
         $packages = [];
         foreach ($validatedData['packageName'] as $index => $name) {
             $packages[] = [
                 'name' => $name,
                 'package_type' => $validatedData['packageType'][$index],
                 'price' => $validatedData['packagePrice'][$index],
-                'revisions' => $validatedData['packageRevisions'][$index],
+                // 'revisions' => $validatedData['packageRevisions'][$index],
                 'delivery_time' => $validatedData['packageDeliveryTime'][$index],
             ];
         }
