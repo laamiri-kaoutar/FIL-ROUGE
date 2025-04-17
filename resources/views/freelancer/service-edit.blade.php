@@ -414,6 +414,8 @@
             }
         }
 
+
+        
         // Toggle Add Feature Form
         let currentPackageId = null;
         function toggleAddFeatureForm(packageType = null, packageId = null) {
