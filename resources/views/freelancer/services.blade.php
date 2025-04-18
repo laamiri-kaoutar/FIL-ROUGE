@@ -77,9 +77,9 @@
                 </div>
                 
                 <div class="mt-4 flex justify-end space-x-2">
-                    <button class="edit-service-btn px-3 py-1 text-sm text-indigo-600 hover:text-indigo-800 border border-indigo-600 hover:border-indigo-800 rounded" data-service-id="{{ $service->id }}">
+                    <a href="{{ route('freelancer.service.edit', $service->id) }}" class="px-3 py-1 text-sm text-indigo-600 hover:text-indigo-800 border border-indigo-600 hover:border-indigo-800 rounded">
                         Edit
-                    </button>
+                    </a>
                     <button class="px-3 py-1 text-sm text-red-600 hover:text-red-800 border border-red-600 hover:border-red-800 rounded">
                         Delete
                     </button>

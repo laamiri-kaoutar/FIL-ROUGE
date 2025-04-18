@@ -27,12 +27,7 @@ class ServiceController extends Controller
         return view('freelancer.services', compact('services', 'tags', 'categories'));
     }
     
-       public function edit($id){
-    
-        $service = Service::find($id);
-        return view('freelancer.service-edit' , compact("service"));
-    
-       }
+   
 
     public function create(CreateServiceRequest $request)
     {
@@ -86,6 +81,7 @@ class ServiceController extends Controller
         if ($service->user_id !== Auth::id()) {
             abort(403, 'Unauthorized');
         }
+        $service->load('packages.features');
         return view('freelancer.service-edit', compact('service'));
     }
 
@@ -158,7 +154,7 @@ class ServiceController extends Controller
             'packageDescription' => 'nullable|string',
             'packageType' => 'required|in:basic,standard,premium',
             'packagePrice' => 'required|numeric|min:0',
-            'packageRevisions' => 'required|integer|min:0',
+            // 'packageRevisions' => 'required|integer|min:0',
             'packageDelivery' => 'required|integer|min:1',
         ]);
 
@@ -167,7 +163,7 @@ class ServiceController extends Controller
             'description' => $validatedData['packageDescription'],
             'package_type' => $validatedData['packageType'],
             'price' => $validatedData['packagePrice'],
-            'revisions' => $validatedData['packageRevisions'],
+            // 'revisions' => $validatedData['packageRevisions'],
             'delivery_time' => $validatedData['packageDelivery'],
         ]);
 
@@ -215,6 +211,7 @@ class ServiceController extends Controller
 
     public function addFeature(Request $request, $id, $packageId)
     {
+        // dd($request);
         $service = $this->serviceRepository->find($id);
         if ($service->user_id !== Auth::id()) {
             abort(403, 'Unauthorized');

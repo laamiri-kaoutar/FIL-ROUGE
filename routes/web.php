@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Feature;
+use App\Models\ServicePackage;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\AuthController;
@@ -12,6 +14,22 @@ Route::get('/', function () {
     return view('home');
 
 })->name('home');
+
+Route::get('/test', function () {
+    // $data = ServicePackage::All();
+    // foreach ($data as $value) {
+    //     var_dump($value->features);
+    //     // dd("tttttttttttttttt");
+    // }
+    // dd($data);
+    $package = App\Models\ServicePackage::find(3);
+
+    var_dump($package->features);
+    foreach ($package->features as $value) {
+        
+    }
+
+})->name('test');
 
 Route::get('/chat', function () {
     // return view('welcome');
@@ -106,14 +124,14 @@ Route::prefix('freelancer')->middleware(['auth', 'freelancer'])->group(function 
     Route::get('/services/{id}/edit',[ServiceController::class, 'edit'])->name('freelancer.service.edit');
     Route::get('/services', [ServiceController::class, 'freelancerServices'])->name('freelancer.services');
     Route::post('/services', [ServiceController::class, 'create'])->name('services.create');
-    Route::post('/services/{id}', [FreelancerController::class, 'update'])->name('services.update');
-    Route::post('/services/{id}/images', [FreelancerController::class, 'addImage'])->name('services.addImage');
-    Route::delete('/services/{id}/images/{imageId}', [FreelancerController::class, 'deleteImage'])->name('services.deleteImage');
-    Route::post('/services/{id}/packages', [FreelancerController::class, 'addPackage'])->name('services.addPackage');
-    Route::post('/services/{id}/packages/{packageId}', [FreelancerController::class, 'updatePackage'])->name('services.updatePackage');
-    Route::delete('/services/{id}/packages/{packageId}', [FreelancerController::class, 'deletePackage'])->name('services.deletePackage');
-    Route::post('/services/{id}/packages/{packageId}/features', [FreelancerController::class, 'addFeature'])->name('services.addFeature');
-    Route::delete('/services/{id}/packages/{packageId}/features/{featureId}', [FreelancerController::class, 'deleteFeature'])->name('services.deleteFeature');   
+    Route::post('/services/{id}', [ServiceController::class, 'update'])->name('services.update');
+    Route::post('/services/{id}/images', [ServiceController::class, 'addImage'])->name('services.addImage');
+    Route::delete('/services/{id}/images/{imageId}', [ServiceController::class, 'deleteImage'])->name('services.deleteImage');
+    Route::post('/services/{id}/packages', [ServiceController::class, 'addPackage'])->name('services.addPackage');
+    Route::post('/services/{id}/packages/{packageId}', [ServiceController::class, 'updatePackage'])->name('services.updatePackage');
+    Route::delete('/services/{id}/packages/{packageId}', [ServiceController::class, 'deletePackage'])->name('services.deletePackage');
+    Route::post('/services/{id}/packages/{packageId}/features', [ServiceController::class, 'addFeature'])->name('services.addFeature');
+    Route::delete('/services/{id}/packages/{packageId}/features/{featureId}', [ServiceController::class, 'deleteFeature'])->name('services.deleteFeature');   
 });
 
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {

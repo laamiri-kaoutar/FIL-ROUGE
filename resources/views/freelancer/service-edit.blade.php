@@ -154,11 +154,11 @@
                             </ul>
                             
                             <div class="flex justify-between">
-                                <button class="text-purple-600 hover:text-purple-800 text-sm font-medium" onclick="toggleAddFeatureForm('{{ $package->package_type }}')">
+                                <button class="text-purple-600 hover:text-purple-800 text-sm font-medium" onclick="toggleAddFeatureForm('{{ $package->id }}')">
                                     + Add Feature
                                 </button>
                                 <div class="space-x-2">
-                                    <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="toggleEditPackageForm('{{ $package->id }}', '{{ $package->name }}', '{{ $package->description }}', '{{ $package->package_type }}', '{{ $package->price }}', '{{ $package->revisions }}', '{{ $package->delivery_time }}')">
+                                    <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="toggleEditPackageForm('{{ $package->id }}', '{{ $package->name }}', '{{ $package->description }}', '{{ $package->package_type }}', '{{ $package->price }}', '{{ $package->delivery_time }}')">
                                         Edit
                                     </button>
                                     <form action="{{ route('services.deletePackage', [$service->id, $package->id]) }}" method="POST" class="inline">
@@ -350,7 +350,7 @@
                         </svg>
                     </button>
                 </div>
-                <form id="addFeatureFormContent" method="POST">
+                <form id="addFeatureFormContent"  method="POST">
                     @csrf
                     <div class="mb-4">
                         <label for="featureDescription" class="block text-sm font-medium text-gray-700 mb-1">Feature Description</label>
@@ -397,7 +397,7 @@
         }
 
         // Toggle Edit Package Form
-        function toggleEditPackageForm(packageId = null, packageName = null, packageDescription = null, packageType = null, packagePrice = null, packageRevisions = null, packageDelivery = null) {
+        function toggleEditPackageForm(packageId = null, packageName = null, packageDescription = null, packageType = null, packagePrice = null, packageDelivery = null) {
             const form = document.getElementById('editPackageForm');
             const formContent = document.getElementById('editPackageFormContent');
             form.classList.toggle('hidden');
@@ -409,22 +409,19 @@
                 document.getElementById('editPackageDescription').value = packageDescription || '';
                 document.getElementById('editPackageType').value = packageType;
                 document.getElementById('editPackagePrice').value = packagePrice;
-                document.getElementById('editPackageRevisions').value = packageRevisions;
                 document.getElementById('editPackageDelivery').value = packageDelivery;
             }
         }  
         // Toggle Add Feature Form
-        let currentPackageId = null;
-        function toggleAddFeatureForm(packageType = null, packageId = null) {
+        function toggleAddFeatureForm( packageId = null) {
+            
             const form = document.getElementById('addFeatureForm');
             const formContent = document.getElementById('addFeatureFormContent');
             form.classList.toggle('hidden');
 
-            if (packageType && packageId) {
-                currentPackageId = packageId;
+            if ( packageId) {
                 formContent.action = `/freelancer/services/{{ $service->id }}/packages/${packageId}/features`;
-                const formattedType = packageType.charAt(0).toUpperCase() + packageType.slice(1);
-                document.getElementById('featurePackageName').textContent = formattedType;
+                console.log(' action is:', formContent.action);
             }
         }
     </script>
