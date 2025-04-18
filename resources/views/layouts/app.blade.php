@@ -8,6 +8,7 @@
     <title>@yield('title', 'FreelanceHub')</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="{{ asset('css/base.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/navbar.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/footer.css') }}">

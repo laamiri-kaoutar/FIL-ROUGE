@@ -75,18 +75,18 @@
             <h2 class="text-xl font-semibold mb-4">Service Images</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
                 @foreach ($service->images as $image)
-                    <div class="relative group">
-                        <img src="{{ asset('storage/' . $image->image_path) }}" alt="Service Image" class="w-full h-40 object-cover rounded-md">
-                        <form action="{{ route('services.deleteImage', [$service->id, $image->id]) }}" method="POST" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </form>
-                    </div>
+                <div class="relative group">
+                    <img src="{{ asset('storage/' . $image->image_path) }}" alt="Service Image" class="w-full h-40 object-cover rounded-md">
+                    <form id="delete-image-form-{{ $image->id }}" action="{{ route('services.deleteImage', [$service->id, $image->id]) }}" method="POST" class="inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" onclick="confirmDeleteImage({{ $image->id }})" class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
                 @endforeach
                 @if ($service->images->count() < 5)
                     <div class="border-2 border-dashed border-gray-300 rounded-md flex flex-col items-center justify-center h-40 cursor-pointer hover:border-purple-400 transition">
@@ -397,7 +397,7 @@
         }
 
         // Toggle Edit Package Form
-        function toggleEditPackageForm(packageId = null, packageName = null, packageDescription = null, packageType = null, packagePrice = null, packageRevisions = null, packageDelivery = null) {
+        function toggleEditPackageForm(packageId = null, packageName = null, packageDescription = null, packageType = null, packagePrice = null, packageDelivery = null) {
             const form = document.getElementById('editPackageForm');
             const formContent = document.getElementById('editPackageFormContent');
             form.classList.toggle('hidden');
@@ -409,7 +409,6 @@
                 document.getElementById('editPackageDescription').value = packageDescription || '';
                 document.getElementById('editPackageType').value = packageType;
                 document.getElementById('editPackagePrice').value = packagePrice;
-                document.getElementById('editPackageRevisions').value = packageRevisions;
                 document.getElementById('editPackageDelivery').value = packageDelivery;
             }
         }  
@@ -424,6 +423,23 @@
                 formContent.action = `/freelancer/services/{{ $service->id }}/packages/${packageId}/features`;
                 console.log(' action is:', formContent.action);
             }
+        }
+
+        function confirmDeleteImage(imageId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'This image will be deleted permanently!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`delete-image-form-${imageId}`).submit();
+                }
+            });
         }
     </script>
 @endsection
