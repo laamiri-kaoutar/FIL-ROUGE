@@ -342,5 +342,22 @@
                 toggleModal();
             }
         });
+
+        function confirmDeleteService(serviceId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'This service will be deleted permanently!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`delete-service-form-${serviceId}`).submit();
+                }
+            });
+        }
     </script>
 @endsection
