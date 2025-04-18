@@ -140,10 +140,10 @@
                                 @foreach ($package->features as $feature)
                                     <li class="flex items-center justify-between text-sm">
                                         <span>{{ $feature->description }} {{ $feature->is_included ? '(Included)' : '(Not Included)' }}</span>
-                                        <form action="{{ route('services.deleteFeature', [$service->id, $package->id, $feature->id]) }}" method="POST" class="inline">
+                                        <form id="delete-feature-form-{{ $feature->id }}" action="{{ route('services.deleteFeature', [$service->id, $package->id, $feature->id]) }}" method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-800">
+                                            <button type="button" onclick="confirmDeleteFeature({{ $feature->id }})" class="text-red-600 hover:text-red-800">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                                 </svg>
@@ -441,5 +441,22 @@
                 }
             });
         }
+
+        function confirmDeleteFeature(featureId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'This feature will be deleted permanently!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`delete-feature-form-${featureId}`).submit();
+                }
+            });
+            }
     </script>
 @endsection
