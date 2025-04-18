@@ -66,7 +66,6 @@
                             </div>
                         </div>
                         
-                        <!-- Tags -->
                         <div class="mt-3">
                             <div class="text-xs text-gray-500 uppercase font-medium">Tags:</div>
                             <div class="mt-1 flex flex-wrap gap-2">
