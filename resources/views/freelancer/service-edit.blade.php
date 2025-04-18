@@ -115,7 +115,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
-                    Add Package
+                    Add Package 
                 </button>
             </div>
             
@@ -208,11 +208,16 @@
                     <div class="grid grid-cols-2 gap-4 mb-4">
                         <div>
                             <label for="packageType" class="block text-sm font-medium text-gray-700 mb-1">Package Type</label>
-                            <select id="packageType" name="packageType"
-                                class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-400 focus:border-transparent">
-                                <option value="basic">Basic</option>
-                                <option value="standard">Standard</option>
-                                <option value="premium">Premium</option>
+                            <select id="packageType" name="packageType" class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-400 focus:border-transparent">
+                                @if (!$service->packages->pluck('package_type')->contains('basic'))
+                                    <option value="basic">Basic</option>
+                                @endif
+                                @if (!$service->packages->pluck('package_type')->contains('standard'))
+                                    <option value="standard">Standard</option>
+                                @endif
+                                @if (!$service->packages->pluck('package_type')->contains('premium'))
+                                    <option value="premium">Premium</option>
+                                @endif
                             </select>
                             @error('packageType')
                                 <span class="text-red-500 text-sm">{{ $message }}</span>
