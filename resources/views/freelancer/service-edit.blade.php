@@ -111,12 +111,14 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-6">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-semibold">Service Packages</h2>
-                <button id="btnAddPackage" class="flex items-center text-purple-600 hover:text-purple-800 transition" onclick="toggleAddPackageForm()">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                    </svg>
-                    Add Package 
-                </button>
+                @if ($service->packages->count() < 3)
+                    <button id="btnAddPackage" class="flex items-center text-purple-600 hover:text-purple-800 transition" onclick="toggleAddPackageForm()">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Add Package
+                    </button>
+                @endif
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
