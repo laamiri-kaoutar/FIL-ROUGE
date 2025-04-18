@@ -80,9 +80,13 @@
                     <a href="{{ route('freelancer.service.edit', $service->id) }}" class="px-3 py-1 text-sm text-indigo-600 hover:text-indigo-800 border border-indigo-600 hover:border-indigo-800 rounded">
                         Edit
                     </a>
-                    <button class="px-3 py-1 text-sm text-red-600 hover:text-red-800 border border-red-600 hover:border-red-800 rounded">
-                        Delete
-                    </button>
+                    <form id="delete-service-form-{{ $service->id }}" action="{{ route('services.destroy', $service->id) }}" method="POST" class="inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" onclick="confirmDeleteService({{ $service->id }})" class="px-3 py-1 text-sm text-red-600 hover:text-red-800 border border-red-600 hover:border-red-800 rounded">
+                            Delete
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
