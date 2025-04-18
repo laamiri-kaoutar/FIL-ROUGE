@@ -397,7 +397,7 @@
         }
 
         // Toggle Edit Package Form
-        function toggleEditPackageForm(packageId = null, packageName = null, packageDescription = null, packageType = null, packagePrice = null, packageDelivery = null) {
+        function toggleEditPackageForm(packageId = null, packageName = null, packageDescription = null, packageType = null, packagePrice = null, packageRevisions = null, packageDelivery = null) {
             const form = document.getElementById('editPackageForm');
             const formContent = document.getElementById('editPackageFormContent');
             form.classList.toggle('hidden');
@@ -409,6 +409,7 @@
                 document.getElementById('editPackageDescription').value = packageDescription || '';
                 document.getElementById('editPackageType').value = packageType;
                 document.getElementById('editPackagePrice').value = packagePrice;
+                document.getElementById('editPackageRevisions').value = packageRevisions;
                 document.getElementById('editPackageDelivery').value = packageDelivery;
             }
         }  
