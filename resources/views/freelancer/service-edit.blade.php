@@ -161,10 +161,10 @@
                                     <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="toggleEditPackageForm('{{ $package->id }}', '{{ $package->name }}', '{{ $package->description }}', '{{ $package->package_type }}', '{{ $package->price }}', '{{ $package->delivery_time }}')">
                                         Edit
                                     </button>
-                                    <form action="{{ route('services.deletePackage', [$service->id, $package->id]) }}" method="POST" class="inline">
+                                    <form id="delete-package-form-{{ $package->id }}" action="{{ route('services.deletePackage', [$service->id, $package->id]) }}" method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-800 text-sm font-medium">
+                                        <button type="button" onclick="confirmDeletePackage({{ $package->id }})" class="text-red-600 hover:text-red-800 text-sm font-medium">
                                             Delete
                                         </button>
                                     </form>
@@ -457,6 +457,23 @@
                     document.getElementById(`delete-feature-form-${featureId}`).submit();
                 }
             });
-            }
+        }
+
+        function confirmDeletePackage(packageId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'This package will be deleted permanently!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`delete-package-form-${packageId}`).submit();
+                }
+            });
+        }
     </script>
 @endsection
