@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('service_packages', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('service_id');
+            $table->string('name');
+            $table->enum('package_type', ['basic', 'standard', 'premium']);
+            $table->float('price');
+            // $table->integer('revisions');
+            $table->text('description')->nullable();
+            $table->integer('delivery_time');
+            $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
             $table->timestamps();
         });
     }

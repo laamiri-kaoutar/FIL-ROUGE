@@ -157,6 +157,7 @@ class ServiceController extends Controller
             // 'packageRevisions' => 'required|integer|min:0',
             'packageDelivery' => 'required|integer|min:1',
         ]);
+        // dd( $validatedData['packageDescription']);
 
         $this->serviceRepository->createPackage($id, [
             'name' => $validatedData['packageName'],

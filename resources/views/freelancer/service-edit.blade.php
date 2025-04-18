@@ -160,7 +160,7 @@
                                     + Add Feature
                                 </button>
                                 <div class="space-x-2">
-                                    <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="toggleEditPackageForm('{{ $package->id }}', '{{ $package->name }}', '{{ $package->description }}', '{{ $package->package_type }}', '{{ $package->price }}', '{{ $package->delivery_time }}')">
+                                    <button class="text-blue-600 hover:text-blue-800 text-sm font-medium" onclick="toggleEditPackageForm('{{ $package->id }}', '{{ $package->name }}', '{{ $package->description }}', '{{ $package->price }}', '{{ $package->delivery_time }}')">
                                         Edit
                                     </button>
                                     <form id="delete-package-form-{{ $package->id }}" action="{{ route('services.deletePackage', [$service->id, $package->id]) }}" method="POST" class="inline">
@@ -295,33 +295,12 @@
                         @enderror
                     </div>
                     <div class="grid grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label for="editPackageType" class="block text-sm font-medium text-gray-700 mb-1">Package Type</label>
-                            <select id="editPackageType" name="packageType"
-                                class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-400 focus:border-transparent">
-                                <option value="basic">Basic</option>
-                                <option value="standard">Standard</option>
-                                <option value="premium">Premium</option>
-                            </select>
-                            @error('packageType')
-                                <span class="text-red-500 text-sm">{{ $message }}</span>
-                            @enderror
-                        </div>
+                        
                         <div>
                             <label for="editPackagePrice" class="block text-sm font-medium text-gray-700 mb-1">Price ($)</label>
                             <input type="number" id="editPackagePrice" name="packagePrice" placeholder="e.g. 25" min="1" 
                                 class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-400 focus:border-transparent">
                             @error('packagePrice')
-                                <span class="text-red-500 text-sm">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4 mb-6">
-                        <div>
-                            <label for="editPackageRevisions" class="block text-sm font-medium text-gray-700 mb-1">Revisions</label>
-                            <input type="number" id="editPackageRevisions" name="packageRevisions" placeholder="e.g. 2" min="0" 
-                                class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-400 focus:border-transparent">
-                            @error('packageRevisions')
                                 <span class="text-red-500 text-sm">{{ $message }}</span>
                             @enderror
                         </div>
@@ -334,6 +313,30 @@
                             @enderror
                         </div>
                     </div>
+                    {{-- <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <label for="editPackageRevisions" class="block text-sm font-medium text-gray-700 mb-1">Revisions</label>
+                            <input type="number" id="editPackageRevisions" name="packageRevisions" placeholder="e.g. 2" min="0" 
+                                class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-400 focus:border-transparent">
+                            @error('packageRevisions')
+                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="editPackageType" class="block text-sm font-medium text-gray-700 mb-1">Package Type</label>
+                            <select id="editPackageType" name="packageType"
+                                class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-400 focus:border-transparent">
+                                <option value="basic">Basic</option>
+                                <option value="standard">Standard</option>
+                                <option value="premium">Premium</option>
+                            </select>
+                            @error('packageType')
+                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
+                        </div>
+                     
+                    </div> --}}
                     <div class="flex justify-end gap-3">
                         <button type="button" onclick="toggleEditPackageForm()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-gray-700 transition">
                             Cancel
@@ -404,7 +407,7 @@
         }
 
         // Toggle Edit Package Form
-        function toggleEditPackageForm(packageId = null, packageName = null, packageDescription = null, packageType = null, packagePrice = null, packageDelivery = null) {
+        function toggleEditPackageForm(packageId = null, packageName = null, packageDescription = null, packagePrice = null, packageDelivery = null) {
             const form = document.getElementById('editPackageForm');
             const formContent = document.getElementById('editPackageFormContent');
             form.classList.toggle('hidden');
@@ -414,7 +417,7 @@
                 document.getElementById('editPackageId').value = packageId;
                 document.getElementById('editPackageName').value = packageName;
                 document.getElementById('editPackageDescription').value = packageDescription || '';
-                document.getElementById('editPackageType').value = packageType;
+                // document.getElementById('editPackageType').value = packageType;
                 document.getElementById('editPackagePrice').value = packagePrice;
                 document.getElementById('editPackageDelivery').value = packageDelivery;
             }

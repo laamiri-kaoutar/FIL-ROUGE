@@ -12,12 +12,13 @@ class ServicePackage extends Model
         'package_type',
         'price',
         'revisions',
+        'description',
         'delivery_time',
     ];
 
     protected $casts = [
         'price' => 'float',
-        'revisions' => 'integer',
+        // 'revisions' => 'integer',
         'delivery_time' => 'integer',
     ];
 
