@@ -50,6 +50,8 @@ class ServiceRepository implements ServiceRepositoryInterface
         $service->delete();
     }
 
+    
+
     public function update(int $id, array $data)
     {
         $service = Service::findOrFail($id);

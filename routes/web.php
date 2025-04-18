@@ -132,6 +132,7 @@ Route::prefix('freelancer')->middleware(['auth', 'freelancer'])->group(function 
     Route::delete('/services/{id}/packages/{packageId}', [ServiceController::class, 'deletePackage'])->name('services.deletePackage');
     Route::post('/services/{id}/packages/{packageId}/features', [ServiceController::class, 'addFeature'])->name('services.addFeature');
     Route::delete('/services/{id}/packages/{packageId}/features/{featureId}', [ServiceController::class, 'deleteFeature'])->name('services.deleteFeature');   
+    Route::delete('/freelancer/services/{id}', [ServiceController::class, 'destroy'])->name('services.destroy');
 });
 
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {

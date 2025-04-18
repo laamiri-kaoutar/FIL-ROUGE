@@ -241,4 +241,15 @@ class ServiceController extends Controller
         $this->serviceRepository->deleteFeature($featureId);
         return redirect()->back()->with('success', 'Feature deleted successfully!');
     }
+    public function destroy($id)
+    {
+        $service = $this->serviceRepository->find($id);
+        if ($service->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized');
+        }
+
+        $this->serviceRepository->delete($id);
+
+        return redirect()->route('freelancer.services')->with('success', 'Service deleted successfully!');
+    }
 }
