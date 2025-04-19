@@ -286,6 +286,7 @@
             const searchForm = document.getElementById('searchForm');
             searchForm.action = '{{ route("freelancer.services") }}';
         });
+
         
         const createServiceBtn = document.getElementById('createServiceBtn');
         const serviceModal = document.getElementById('serviceModal');
