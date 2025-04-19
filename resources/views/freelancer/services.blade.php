@@ -96,6 +96,10 @@
             @endforelse
         </div>
 
+        <div class="mt-6">
+            {{ $services->appends(request()->query())->links() }}
+        </div>
+
         
                <!-- Modal -->
         <div id="serviceModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 {{ session('errors') ? '' : 'hidden' }}">
@@ -287,7 +291,7 @@
             searchForm.action = '{{ route("freelancer.services") }}';
         });
 
-        
+
         const createServiceBtn = document.getElementById('createServiceBtn');
         const serviceModal = document.getElementById('serviceModal');
         const closeModalBtn = document.getElementById('closeModalBtn');
