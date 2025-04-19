@@ -14,17 +14,25 @@ class ClientController extends Controller
         $this->serviceRepository = $serviceRepository;
     }
 
-    // public function services()
-    // {
-    //     $services = $this->serviceRepository->all()->paginate(6); // Paginate 6 services per page
-    //     return view('client.services', compact('services'));
-    // }
-
     public function services(Request $request)
     {
         $query = $request->input('query');
-        $services = $this->serviceRepository->all($query);
+        $category = $request->input('category');
+        $sort = $request->input('sort', 'recommended');
+        $minPrice = $request->input('min_price');
+        $maxPrice = $request->input('max_price');
 
-        return view('client.services', compact('services'));
+        $services = $this->serviceRepository->all($query, $category ? (int)$category : null, $minPrice ? (float)$minPrice : null, $maxPrice ? (float)$maxPrice : null, $sort);
+        $categories = Category::all();
+
+        return view('client.services', compact('services', 'categories'));
     }
+
+    public function show($id)
+    {
+        $service = $this->serviceRepository->find($id);
+        return view('client.service-show', compact('service'));
+    }
+
+   
 }
