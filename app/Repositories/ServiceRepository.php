@@ -31,7 +31,7 @@ class ServiceRepository implements ServiceRepositoryInterface
 
     public function find(int $id)
     {
-        return Service::findOrFail($id);
+        return Service::with(['images', 'packages.features', 'tags', 'user', 'reviews.user'])->findOrFail($id);
     }
 
     public function all(?string $query = null, ?int $categoryId = null, ?float $minPrice = null, ?float $maxPrice = null, ?string $sort = 'recommended')
