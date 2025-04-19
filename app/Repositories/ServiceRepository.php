@@ -34,15 +34,39 @@ class ServiceRepository implements ServiceRepositoryInterface
         return Service::findOrFail($id);
     }
 
-    public function all(?string $query = null)
+    public function all(?string $query = null, ?int $categoryId = null, ?float $minPrice = null, ?float $maxPrice = null, ?string $sort = 'recommended')
     {
-        $builder = Service::with(['images', 'packages.features']);
-    
+        $builder = Service::with(['images', 'packages.features', 'tags']);
+
+        // Search filter
         if ($query) {
             $builder->where('title', 'like', '%' . $query . '%');
         }
-    
-        return $builder->paginate(6); 
+
+        // Category filter
+        if ($categoryId) {
+            $builder->where('category_id', $categoryId);
+        }
+
+        // Price range filter
+        if ($minPrice || $maxPrice) {
+            $builder->whereHas('packages', function ($q) use ($minPrice, $maxPrice) {
+                if ($minPrice) {
+                    $q->where('price', '>=', $minPrice);
+                }
+                if ($maxPrice) {
+                    $q->where('price', '<=', $maxPrice);
+                }
+            });
+        }
+
+        if ($sort === 'rating-high-low') {
+            $builder->orderBy('rating', 'desc');
+        } else {
+            $builder->orderBy('rating', 'desc');
+        }
+
+        return $builder->paginate(6);
     }
 
     public function getByUserId(int $userId)
