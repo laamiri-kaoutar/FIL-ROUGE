@@ -95,4 +95,16 @@ class ServiceRepository implements ServiceRepositoryInterface
         $feature = Feature::findOrFail($featureId);
         $feature->delete();
     }
+
+    public function getByUserIdWithFilter(int $userId, ?string $query = null)
+{
+    $builder = Service::with(['images', 'packages.features'])
+        ->where('user_id', $userId);
+
+    if ($query) {
+        $builder->where('title', 'like', '%' . $query . '%');
+    }
+
+    return $builder->get();
+}
 }
