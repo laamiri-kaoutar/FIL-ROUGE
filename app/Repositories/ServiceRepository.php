@@ -97,14 +97,14 @@ class ServiceRepository implements ServiceRepositoryInterface
     }
 
     public function getByUserIdWithFilter(int $userId, ?string $query = null)
-{
-    $builder = Service::with(['images', 'packages.features'])
-        ->where('user_id', $userId);
-
-    if ($query) {
-        $builder->where('title', 'like', '%' . $query . '%');
+    {
+        $builder = Service::with(['images', 'packages.features'])
+            ->where('user_id', $userId);
+    
+        if ($query) {
+            $builder->where('title', 'like', '%' . $query . '%');
+        }
+    
+        return $builder->paginate(2); 
     }
-
-    return $builder->get();
-}
 }
