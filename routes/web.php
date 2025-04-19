@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\CategoryController;
 
@@ -133,6 +134,15 @@ Route::prefix('freelancer')->middleware(['auth', 'freelancer'])->group(function 
     Route::post('/services/{id}/packages/{packageId}/features', [ServiceController::class, 'addFeature'])->name('services.addFeature');
     Route::delete('/services/{id}/packages/{packageId}/features/{featureId}', [ServiceController::class, 'deleteFeature'])->name('services.deleteFeature');   
     Route::delete('/freelancer/services/{id}', [ServiceController::class, 'destroy'])->name('services.destroy');
+});
+
+
+
+Route::prefix('client')->middleware(['auth'])->group(function () {
+    Route::get('/services', [ClientController::class, 'services'])->name('client.services');
+    Route::get('/services/{id}', [ClientController::class, 'show'])->name('client.services.show');
+    Route::post('/services/{id}/favorite', [ClientController::class, 'toggleFavorite'])->name('client.services.favorite');
+    Route::post('/services/{id}/review', [ClientController::class, 'storeReview'])->name('client.services.review');
 });
 
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
