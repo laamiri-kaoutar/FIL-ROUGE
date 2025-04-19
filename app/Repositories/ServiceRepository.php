@@ -34,9 +34,15 @@ class ServiceRepository implements ServiceRepositoryInterface
         return Service::findOrFail($id);
     }
 
-    public function all()
+    public function all(?string $query = null)
     {
-        return Service::all();
+        $builder = Service::with(['images', 'packages.features']);
+    
+        if ($query) {
+            $builder->where('title', 'like', '%' . $query . '%');
+        }
+    
+        return $builder->paginate(6); 
     }
 
     public function getByUserId(int $userId)
