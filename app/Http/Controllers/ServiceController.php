@@ -17,10 +17,11 @@ class ServiceController extends Controller
     {
         $this->serviceRepository = $serviceRepository;
     }
-
-    public function freelancerServices()
+    public function freelancerServices(Request $request)
     {
-        $services = $this->serviceRepository->all()->where('user_id', Auth::id());
+        $query = $request->input('query');
+        $services = $this->serviceRepository->getByUserIdWithFilter(Auth::id(), $query);
+    
         $tags = Tag::all();
         $categories = Category::all();
     
