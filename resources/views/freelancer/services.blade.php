@@ -3,7 +3,9 @@
 
 @section('title', 'My Services - FreelanceHub')
 
+
 @section('content')
+
     <main class="container mx-auto px-8 py-12">
         <!-- Page Header -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
@@ -70,7 +72,7 @@
                             <div class="text-xs text-gray-500 uppercase font-medium">Tags:</div>
                             <div class="mt-1 flex flex-wrap gap-2">
                                 @foreach ($service->tags as $tag)
-                                    <span class="px-2 py-1 bg-indigo-100 text-indigo-800 text-xs rounded-full">{{ $tag->name }}</span>
+                                    <span class="px-2 py-1 text-xs rounded-full" style="background-color: {{ $tag->color }}; color: #FFFFFF;">#{{ $tag->name }}</span>
                                 @endforeach
                             </div>
                         </div>
@@ -279,6 +281,11 @@
 @endsection
 @section('scripts')
     <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchForm = document.getElementById('searchForm');
+            searchForm.action = '{{ route("freelancer.services") }}';
+        });
         
         const createServiceBtn = document.getElementById('createServiceBtn');
         const serviceModal = document.getElementById('serviceModal');

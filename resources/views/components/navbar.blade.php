@@ -15,16 +15,16 @@
 
                 <!-- Main Search Bar (Optional) -->
                 @if ($showSearch)
-                    <div class="hidden lg:flex items-center ml-8 flex-1 max-w-2xl">
-                        <div class="search-gradient w-full bg-white rounded-full shadow-sm">
-                            <div class="flex items-center px-4 py-2">
-                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                                </svg>
-                                <input type="search" placeholder="Search for services..." class="w-full ml-2 outline-none bg-transparent text-gray-700 placeholder-gray-400">
-                            </div>
-                        </div>
+                <div class="hidden lg:flex items-center ml-8 flex-1 max-w-2xl">
+                    <div class="search-gradient w-full bg-white rounded-full shadow-sm">
+                        <form id="searchForm" method="GET" class="flex items-center px-4 py-2">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                            <input type="search" name="query" placeholder="Search for services..." value="{{ request('query') }}" class="w-full ml-2 outline-none bg-transparent text-gray-700 placeholder-gray-400">
+                        </form>
                     </div>
+                </div>
                 @endif
 
                 <!-- Desktop Navigation Links -->
