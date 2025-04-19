@@ -8,7 +8,8 @@ interface ServiceRepositoryInterface
     public function addImage(int $serviceId, array $data);
     public function addPackages(int $serviceId, array $packages);
     public function find(int $id);
-    public function all();
+    public function all(?string $query = null, ?int $categoryId = null, ?float $minPrice = null, ?float $maxPrice = null, ?string $sort = 'recommended');
+    // public function all();
     public function getByUserId(int $userId);
     public function delete(int $id);
 

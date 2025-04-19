@@ -1,10 +1,12 @@
+@php
+    $showSearch = false;
+@endphp
 @extends('layouts.app')
 @section('title', 'FreelanceHub - Forgot Password')
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
 @endsection
 @section('content')
-@include('components.navbar', ['showSearch' => false])
 
     <main class="min-h-screen py-16 px-4 sm:px-6 lg:px-8">
         <div class="max-w-md mx-auto">

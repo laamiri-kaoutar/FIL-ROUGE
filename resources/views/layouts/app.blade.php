@@ -26,7 +26,9 @@
     @yield('styles')
 </head>
 <body>
-    @include('components.navbar', ['showSearch' => true])
+    {{-- @include('components.navbar', ['showSearch' => true]) --}}
+    @include('components.navbar', ['showSearch' => $showSearch ?? true])
+
 
     <main>
         @yield('content')

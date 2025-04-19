@@ -1,9 +1,11 @@
+@php
+    $showSearch = false;
+@endphp
 @extends('layouts.app')
 
 @section('title', 'FreelanceHub - Reset Password')
 
 @section('content')
-@include('components.navbar', ['showSearch' => false])
 
 <main class="min-h-screen py-16 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md mx-auto">
