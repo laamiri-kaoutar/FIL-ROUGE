@@ -6,6 +6,7 @@ use App\Models\Review;
 use App\Models\Category;
 use App\Models\Favorite;
 use Illuminate\Http\Request;
+use App\Services\InvoiceService;
 use App\Services\PaymentService;
 use App\Repositories\OrderRepository;
 use App\Repositories\ServiceRepository;
@@ -15,15 +16,18 @@ class ClientController extends Controller
     protected $serviceRepository;
     protected $orderRepository;
     protected $paymentService;
+    protected $invoiceService;
 
     public function __construct(
         ServiceRepository $serviceRepository,
         OrderRepository $orderRepository,
-        PaymentService $paymentService
+        PaymentService $paymentService,
+        InvoiceService $invoiceService
     ) {
         $this->serviceRepository = $serviceRepository;
         $this->orderRepository = $orderRepository;
         $this->paymentService = $paymentService;
+        $this->invoiceService = $invoiceService;
     }
 
     public function services(Request $request)
@@ -170,6 +174,16 @@ class ClientController extends Controller
         $order = $this->orderRepository->find($order_id);
         if ($order->user_id !== auth()->id()) { abort(403, 'Unauthorized action.');}
         return view('client.order-confirmation', compact('order'));
+    }
+    public function downloadInvoice($order_id)
+    {
+        $order = $this->orderRepository->find($order_id);
+    
+        if ($order->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+    
+        return $this->invoiceService->generateInvoice($order);
     }
    
 }
