@@ -6,15 +6,24 @@ use App\Models\Review;
 use App\Models\Category;
 use App\Models\Favorite;
 use Illuminate\Http\Request;
+use App\Services\PaymentService;
+use App\Repositories\OrderRepository;
 use App\Repositories\ServiceRepository;
 
 class ClientController extends Controller
 {
     protected $serviceRepository;
+    protected $orderRepository;
+    protected $paymentService;
 
-    public function __construct(ServiceRepository $serviceRepository)
-    {
+    public function __construct(
+        ServiceRepository $serviceRepository,
+        OrderRepository $orderRepository,
+        PaymentService $paymentService
+    ) {
         $this->serviceRepository = $serviceRepository;
+        $this->orderRepository = $orderRepository;
+        $this->paymentService = $paymentService;
     }
 
     public function services(Request $request)
@@ -38,52 +47,139 @@ class ClientController extends Controller
     }
 
     public function toggleFavorite(Request $request, $id)
-{
-    $user = auth()->user();
-    $service = $this->serviceRepository->find($id);
+    {
+        $favorite = Favorite::where('user_id', auth()->id())->where('service_id', $id)->first();
 
-    $favorite = Favorite::where('user_id', $user->id)->where('service_id', $service->id)->first();
+        if ($favorite) {
+            $favorite->delete();
+            $isFavorited = false;
+        } else {
+            Favorite::create(['user_id' =>auth()->id(), 'service_id' => $id]);
+            $isFavorited = true;
+        }
 
-    if ($favorite) {
-        $favorite->delete();
-        $isFavorited = false;
-    } else {
-        Favorite::create(['user_id' => $user->id, 'service_id' => $service->id]);
-        $isFavorited = true;
+        return response()->json(['isFavorited' => $isFavorited]);
     }
 
-    return response()->json(['isFavorited' => $isFavorited]);
-}
+    public function storeReview(Request $request, $id)
+    {
+        $request->validate([
+            'rating' => 'required|numeric|min:1|max:5',
+            'comment' => 'nullable|string|max:1000',
+        ]);
+        $service = $this->serviceRepository->find($id);
 
-public function storeReview(Request $request, $id)
-{
-    $request->validate([
-        'rating' => 'required|numeric|min:1|max:5',
-        'comment' => 'nullable|string|max:1000',
-    ]);
+        if ($service->reviews()->where('user_id', $user->id)->exists()) {
+            return redirect()->back()->with('error', 'You have already reviewed this service.');
+        }
 
-    $user = auth()->user();
-    $service = $this->serviceRepository->find($id);
+        Review::create([
+            'service_id' => $service->id,
+            'user_id' => auth()->id(),
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+        ]);
 
-    // Check if user has already reviewed this service
-    if ($service->reviews()->where('user_id', $user->id)->exists()) {
-        return redirect()->back()->with('error', 'You have already reviewed this service.');
+        $this->serviceRepository->updateRating($id);
+
+        return redirect()->back()->with('success', 'Review submitted successfully!');
     }
 
-    Review::create([
-        'service_id' => $service->id,
-        'user_id' => $user->id,
-        'rating' => $request->rating,
-        'comment' => $request->comment,
-    ]);
+    public function editReview($service_id, $review_id)
+    {
+        $review = Review::findOrFail($review_id);
+        if ($review->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
 
-    // Update service rating and reviews_count
-    $service->update([
-        'rating' => $service->reviews()->avg('rating') ?? 0,
-        'reviews_count' => $service->reviews()->count(),
-    ]);
+        return response()->json([
+            'rating' => $review->rating,
+            'comment' => $review->comment,
+        ]);
+    }
 
-    return redirect()->back()->with('success', 'Review submitted successfully!');
-}
+    public function updateReview(Request $request, $service_id, $review_id)
+    {
+        $review = Review::findOrFail($review_id);
+
+        if ($review->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $validated = $request->validate([
+            'rating' => 'required|numeric|min:1|max:5',
+            'comment' => 'nullable|string|max:1000',
+        ]);
+
+        $review->update($validated);
+        $this->serviceRepository->updateRating($service_id);
+        return redirect()->route('client.services.show', $service_id)->with('success', 'Review updated successfully!');
+    }
+
+    public function deleteReview($service_id, $review_id)
+    {
+        $review = Review::findOrFail($review_id);
+    
+        if ($review->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+    
+        $review->delete();
+        $this->serviceRepository->updateRating($service_id);
+        return redirect()->route('client.services.show', $service_id)->with('success', 'Review deleted successfully!');
+    }
+
+
+    public function showPaymentPage(Request $request, $service_id)
+    {
+        $service = $this->serviceRepository->find($service_id);
+        $package_id = $request->query('package_id');
+        $package = $service->packages()->findOrFail($package_id);
+
+        return view('payment', compact('service', 'package'));
+    }
+
+    public function processPayment(Request $request)
+    {
+        $request->validate([
+            'stripeToken' => 'required',
+            'service_id' => 'required|exists:services,id',
+            'package_id' => 'required|exists:service_packages,id',
+        ]);
+
+        $service = $this->serviceRepository->find($request->service_id);
+        $package = $service->packages()->findOrFail($request->package_id);
+
+        // Process payment with Stripe
+        try {
+            $charge = $this->paymentService->charge($package->price, $request->stripeToken);
+
+            // Create order after successful payment
+            $order = $this->orderRepository->create([
+                'user_id' => auth()->id(),
+                'service_id' => $service->id,
+                'package_id' => $package->id,
+                'amount' => $package->price,
+                'status' => 'completed',
+                'stripe_transaction_id' => $charge->id,
+            ]);
+
+            return redirect()->route('client.order_confirmation', $order->id)->with('success', 'Payment completed successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function orderConfirmation($order_id)
+    {
+        $order = $this->orderRepository->find($order_id);
+
+        // Ensure the order belongs to the user
+        if ($order->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        return view('client.order-confirmation', compact('order'));
+    }
    
 }
