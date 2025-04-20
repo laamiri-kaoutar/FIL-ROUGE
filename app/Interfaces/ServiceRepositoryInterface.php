@@ -22,4 +22,5 @@ interface ServiceRepositoryInterface
     public function createFeature(int $packageId, array $data);
     public function deleteFeature(int $featureId);
     public function getByUserIdWithFilter(int $userId, ?string $query = null);
+    public function updateRating(int $serviceId);
 }
