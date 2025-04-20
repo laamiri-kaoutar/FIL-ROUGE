@@ -66,7 +66,7 @@ Route::get('/client/services/{id}', function () {
 })->name('client.service.show');
 
 Route::get('/client/payment', function () {
-    return view('payment');
+    return view('client.payment');
 })->name('client.payment');
 
 Route::get('/client/dashboard', function () {
@@ -133,9 +133,9 @@ Route::prefix('freelancer')->middleware(['auth', 'freelancer'])->group(function 
     Route::delete('/services/{id}/packages/{packageId}', [ServiceController::class, 'deletePackage'])->name('services.deletePackage');
     Route::post('/services/{id}/packages/{packageId}/features', [ServiceController::class, 'addFeature'])->name('services.addFeature');
     Route::delete('/services/{id}/packages/{packageId}/features/{featureId}', [ServiceController::class, 'deleteFeature'])->name('services.deleteFeature');   
-    Route::delete('/freelancer/services/{id}', [ServiceController::class, 'destroy'])->name('services.destroy');
+    Route::delete('/services/{id}', [ServiceController::class, 'destroy'])->name('services.destroy');
+    
 });
-
 
 
 Route::prefix('client')->middleware(['auth'])->group(function () {
@@ -143,6 +143,12 @@ Route::prefix('client')->middleware(['auth'])->group(function () {
     Route::get('/services/{id}', [ClientController::class, 'show'])->name('client.services.show');
     Route::post('/services/{id}/favorite', [ClientController::class, 'toggleFavorite'])->name('client.services.favorite');
     Route::post('/services/{id}/review', [ClientController::class, 'storeReview'])->name('client.services.review');
+    Route::get('/services/{service_id}/reviews/{review_id}/edit', [ClientController::class, 'editReview'])->name('client.services.reviews.edit');
+    Route::put('/services/{service_id}/reviews/{review_id}', [ClientController::class, 'updateReview'])->name('client.services.reviews.update');
+    Route::delete('/services/{service_id}/reviews/{review_id}', [ClientController::class, 'deleteReview'])->name('client.services.reviews.delete');
+    Route::get('/services/{service_id}/order', [ClientController::class, 'showPaymentPage'])->name('client.services.order');
+    Route::post('/process-payment', [ClientController::class, 'processPayment'])->name('client.process_payment');
+    Route::get('/order-confirmation/{order_id}', [ClientController::class, 'orderConfirmation'])->name('client.order_confirmation');
 });
 
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
