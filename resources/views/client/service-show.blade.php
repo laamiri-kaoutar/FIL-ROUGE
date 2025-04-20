@@ -42,18 +42,18 @@
                                                 {{ $i < $service->rating ? '★' : '☆' }}
                                             @endfor
                                         </span>
-                                        <span class="ml-1 text-gray-600">{{ number_format($service->rating, 1) }} ({{ $service->reviews_count }})</span>
+                                        <span class="ml-1 text-gray-600">{{ number_format($service->rating, 1) }} ({{ $service->reviews()->count() }})</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
                         <!-- Add to Favorites Button -->
-                        <button id="favoriteBtn" class="flex items-center text-sm font-medium rounded-lg px-3 py-2 transition-all duration-300 {{ auth()->check() && auth()->user()->favorites()->where('service_id', $service->id)->exists() ? 'bg-red-100 text-red-600' : 'text-gray-600 hover:bg-gray-100' }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 transition-all duration-300 {{ auth()->check() && auth()->user()->favorites()->where('service_id', $service->id)->exists() ? 'fill-red-600 stroke-red-600' : 'fill-none stroke-current' }}" viewBox="0 0 24 24">
+                        <button id="favoriteBtn" class="flex items-center text-sm font-medium text-gray-600 hover:text-purple-600 {{ auth()->check() && auth()->user()->favorites()->where('service_id', $service->id)->exists() ? 'text-red-600' : '' }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                             </svg>
-                            <span id="favoriteText" class="font-medium">{{ auth()->check() && auth()->user()->favorites()->where('service_id', $service->id)->exists() ? 'Added to Favorites' : 'Add to Favorites' }}</span>
+                            <span id="favoriteText">{{ auth()->check() && auth()->user()->favorites()->where('service_id', $service->id)->exists() ? 'Added to Favorites' : 'Add to Favorites' }}</span>
                         </button>
                     </div>
                 </div>
@@ -104,7 +104,7 @@
                         <div class="flex justify-between items-center mb-2">
                             <span class="font-semibold text-lg">{{ $package->name }}</span>
                             <span class="bg-{{ $loop->index == 0 ? 'blue' : ($loop->index == 1 ? 'purple' : 'green') }}-100 text-{{ $loop->index == 0 ? 'blue' : ($loop->index == 1 ? 'purple' : 'green') }}-800 px-3 py-1 rounded-full text-sm">
-                                {{ $loop->index == 0 ? 'Popular' : ($loop->index == 1 ? 'Standard' : 'Enterprise') }}
+                                {{ $package->package_type }}
                             </span>
                         </div>
                         <div class="text-2xl font-bold text-gray-900 mb-3">${{ $package->price }}</div>
@@ -149,7 +149,7 @@
                         @endfor
                     </span>
                     <span class="ml-2 font-medium">{{ number_format($service->rating, 1) }}</span>
-                    <span class="text-gray-600">({{ $service->reviews_count }} reviews)</span>
+                    <span class="text-gray-600">({{ $service->reviews()->count() }} reviews)</span>
                 </div>
 
                 <!-- Review Items -->
@@ -157,9 +157,9 @@
                     @forelse ($service->reviews as $review)
                         <div class="flex gap-4 pb-6 border-b border-gray-100">
                             <img src="{{ $review->user->profile_photo_path ? asset('storage/' . $review->user->profile_photo_path) : 'https://via.placeholder.com/50' }}" 
-                                 alt="{{ $review->user->name }}" 
-                                 class="w-12 h-12 rounded-full">
-                            <div>
+                                alt="{{ $review->user->name }}" 
+                                class="w-12 h-12 rounded-full">
+                            <div class="flex-1">
                                 <div class="flex items-center gap-2 mb-1">
                                     <h4 class="font-medium">{{ $review->user->name }}</h4>
                                     <span class="text-yellow-400">
@@ -172,6 +172,18 @@
                                 <p class="text-gray-600">
                                     {{ $review->comment ?? 'No comment provided.' }}
                                 </p>
+                                @auth
+                                    @if ($review->user_id === auth()->id())
+                                        <div class="mt-2 flex gap-2">
+                                            <button onclick="openEditReviewModal({{ $review->id }})" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Edit</button>
+                                            <form id="delete-review-form-{{ $review->id }}" action="{{ route('client.services.reviews.delete', [$service->id, $review->id]) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" onclick="confirmDeleteReview({{ $review->id }})" class="text-red-600 hover:text-red-800 text-sm font-medium">Delete</button>
+                                            </form>
+                                        </div>
+                                    @endif
+                                @endauth
                             </div>
                         </div>
                     @empty
@@ -237,9 +249,52 @@
             </div>
         </div>
     </div>
+
+    <!-- Edit Review Modal -->
+    <div id="editReviewModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg w-full max-w-md mx-4 shadow-lg">
+            <!-- Modal Header -->
+            <div class="bg-gray-50 px-6 py-4 rounded-t-lg border-b">
+                <h3 class="text-lg font-semibold text-gray-900">Edit Your Review</h3>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="px-6 py-4">
+                <form id="editReviewForm" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Your Rating</label>
+                        <select name="rating" id="editReviewRating" class="border border-gray-300 rounded p-2 w-full">
+                            @for ($i = 1; $i <= 5; $i++)
+                                <option value="{{ $i }}">{{ $i }} Star{{ $i > 1 ? 's' : '' }}</option>
+                            @endfor
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Your Review</label>
+                        <textarea name="comment" id="editReviewComment" class="w-full p-3 border border-gray-300 rounded" rows="4" placeholder="Share your experience..."></textarea>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Modal Footer -->
+            <div class="bg-gray-50 px-6 py-4 rounded-b-lg border-t flex justify-end space-x-3">
+                <button onclick="closeEditReviewModal()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-100">
+                    Cancel
+                </button>
+                <button onclick="submitEditReview()" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">
+                    Update Review
+                </button>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
+    <!-- Include SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         // DOM elements
         const packageModal = document.getElementById('packageModal');
@@ -247,7 +302,10 @@
         const cancelButton = document.getElementById('cancelButton');
         const favoriteBtn = document.getElementById('favoriteBtn');
         const favoriteText = document.getElementById('favoriteText');
-        
+        const editReviewModal = document.getElementById('editReviewModal');
+        const editReviewForm = document.getElementById('editReviewForm');
+        let currentReviewId = null;
+
         // Function to open modal and populate with package details
         function selectPackage(button) {
             const packageId = button.getAttribute('data-package-id');
@@ -261,65 +319,110 @@
             document.getElementById('packageDescription').textContent = description;
 
             // Set the payment link
-            confirmButton.href = `/client/services/${{{ $service->id }}}}/order?package_id=${packageId}`;
+            confirmButton.href = `/client/services/{{ $service->id }}/order?package_id=${packageId}`;
 
             // Show the modal
             packageModal.classList.remove('hidden');
         }
         
-        // Function to close the modal
+        // Function to close the package modal
         function closeModal() {
             packageModal.classList.add('hidden');
         }
         
         // Toggle favorite status
         function toggleFavorite() {
-    fetch('{{ route('client.services.favorite', $service->id) }}', {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Content-Type': 'application/json',
-        },
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        
-        const heartIcon = favoriteBtn.querySelector('svg');
-        
-        if (data.isFavorited) {
-            // Favorited state
-            favoriteBtn.classList.add('bg-red-100', 'text-red-600');
-            favoriteBtn.classList.remove('text-gray-600', 'hover:bg-gray-100');
-            heartIcon.classList.add('fill-red-600', 'stroke-red-600');
-            heartIcon.classList.remove('fill-none', 'stroke-current');
-            favoriteText.textContent = 'Added to Favorites';
-            
-            // Add a small animation
-            heartIcon.classList.add('scale-110');
-            setTimeout(() => {
-                heartIcon.classList.remove('scale-110');
-            }, 300);
-        } else {
-            // Unfavorited state
-            favoriteBtn.classList.remove('bg-red-100', 'text-red-600');
-            favoriteBtn.classList.add('text-gray-600', 'hover:bg-gray-100');
-            heartIcon.classList.remove('fill-red-600', 'stroke-red-600');
-            heartIcon.classList.add('fill-none', 'stroke-current');
-            favoriteText.textContent = 'Add to Favorites';
+            fetch('{{ route('client.services.favorite', $service->id) }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.isFavorited) {
+                    favoriteBtn.classList.add('text-red-600');
+                    favoriteText.textContent = 'Added to Favorites';
+                } else {
+                    favoriteBtn.classList.remove('text-red-600');
+                    favoriteText.textContent = 'Add to Favorites';
+                }
+            })
+            .catch(error => console.error('Error:', error));
         }
-    })
-    .catch(error => console.error('Error:', error));
-}
+
+        // Open Edit Review Modal
+        function openEditReviewModal(reviewId) {
+            currentReviewId = reviewId;
+            fetch(`/client/services/{{ $service->id }}/reviews/${reviewId}/edit`, {
+                method: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Populate the modal form
+                document.getElementById('editReviewRating').value = data.rating;
+                document.getElementById('editReviewComment').value = data.comment || '';
+
+                // Set the form action
+                editReviewForm.action = `/client/services/{{ $service->id }}/reviews/${reviewId}`;
+
+                // Show the modal
+                editReviewModal.classList.remove('hidden');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to load review data.');
+            });
+        }
+
+        // Close Edit Review Modal
+        function closeEditReviewModal() {
+            editReviewModal.classList.add('hidden');
+            currentReviewId = null;
+        }
+
+        // Submit Edit Review Form
+        function submitEditReview() {
+            editReviewForm.submit();
+        }
+
+        // Confirm Delete Review with SweetAlert
+        function confirmDeleteReview(reviewId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`delete-review-form-${reviewId}`).submit();
+                }
+            });
+        }
         
-        // Event listeners
+        // Event listeners for package modal
         cancelButton.addEventListener('click', closeModal);
         favoriteBtn.addEventListener('click', toggleFavorite);
         
-        // Close the modal if user clicks outside
+        // Close the package modal if user clicks outside
         packageModal.addEventListener('click', function(event) {
             if (event.target === packageModal) {
                 closeModal();
+            }
+        });
+
+        // Close the edit review modal if user clicks outside
+        editReviewModal.addEventListener('click', function(event) {
+            if (event.target === editReviewModal) {
+                closeEditReviewModal();
             }
         });
     </script>
