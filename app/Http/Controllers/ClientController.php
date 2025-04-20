@@ -129,14 +129,12 @@ class ClientController extends Controller
         return redirect()->route('client.services.show', $service_id)->with('success', 'Review deleted successfully!');
     }
 
-
     public function showPaymentPage(Request $request, $service_id)
     {
         $service = $this->serviceRepository->find($service_id);
         $package_id = $request->query('package_id');
         $package = $service->packages()->findOrFail($package_id);
-
-        return view('payment', compact('service', 'package'));
+        return view('client.payment', compact('service', 'package'));
     }
 
     public function processPayment(Request $request)
@@ -146,15 +144,12 @@ class ClientController extends Controller
             'service_id' => 'required|exists:services,id',
             'package_id' => 'required|exists:service_packages,id',
         ]);
-
         $service = $this->serviceRepository->find($request->service_id);
         $package = $service->packages()->findOrFail($request->package_id);
-
-        // Process payment with Stripe
+        // dd(config('services.stripe.secret'));
         try {
             $charge = $this->paymentService->charge($package->price, $request->stripeToken);
-
-            // Create order after successful payment
+            // dd($charge);
             $order = $this->orderRepository->create([
                 'user_id' => auth()->id(),
                 'service_id' => $service->id,
@@ -163,9 +158,9 @@ class ClientController extends Controller
                 'status' => 'completed',
                 'stripe_transaction_id' => $charge->id,
             ]);
-
             return redirect()->route('client.order_confirmation', $order->id)->with('success', 'Payment completed successfully!');
         } catch (\Exception $e) {
+            dd("this is the error : ".$e->getMessage());
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -173,12 +168,7 @@ class ClientController extends Controller
     public function orderConfirmation($order_id)
     {
         $order = $this->orderRepository->find($order_id);
-
-        // Ensure the order belongs to the user
-        if ($order->user_id !== auth()->id()) {
-            abort(403, 'Unauthorized action.');
-        }
-
+        if ($order->user_id !== auth()->id()) { abort(403, 'Unauthorized action.');}
         return view('client.order-confirmation', compact('order'));
     }
    
