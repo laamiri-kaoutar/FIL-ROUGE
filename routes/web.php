@@ -149,6 +149,7 @@ Route::prefix('client')->middleware(['auth'])->group(function () {
     Route::get('/services/{service_id}/order', [ClientController::class, 'showPaymentPage'])->name('client.services.order');
     Route::post('/process-payment', [ClientController::class, 'processPayment'])->name('client.process_payment');
     Route::get('/order-confirmation/{order_id}', [ClientController::class, 'orderConfirmation'])->name('client.order_confirmation');
+    Route::get('/order/{order_id}/invoice', [ClientController::class, 'downloadInvoice'])->name('client.order_invoice');
 });
 
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
