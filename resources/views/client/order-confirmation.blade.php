@@ -38,6 +38,13 @@
                         <span class="capitalize">{{ $order->status }}</span>
                     </div>
                 </div>
+
+                <!-- Download Invoice Button -->
+                <div class="mt-6 text-center">
+                    <a href="{{ route('client.order_invoice', $order->id) }}" class="inline-block primary-gradient text-white py-2 px-4 rounded-md font-medium hover:opacity-90 transition-opacity">
+                        Download Invoice
+                    </a>
+                </div>
             </div>
 
             <div class="p-6 border-t border-gray-200 text-center">
