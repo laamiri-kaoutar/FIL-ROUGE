@@ -80,8 +80,6 @@ class ServiceRepository implements ServiceRepositoryInterface
         $service->delete();
     }
 
-    
-
     public function update(int $id, array $data)
     {
         $service = Service::findOrFail($id);
@@ -136,5 +134,13 @@ class ServiceRepository implements ServiceRepositoryInterface
         }
     
         return $builder->paginate(2); 
+    }
+
+    public function updateRating(int $serviceId)
+    {
+        $service = Service::findOrFail($serviceId);
+        $service->update([
+            'rating' => $service->reviews()->avg('rating') ?? 0,
+        ]);
     }
 }
