@@ -152,6 +152,11 @@ Route::prefix('client')->middleware(['auth'])->group(function () {
     Route::get('/order/{order_id}/invoice', [ClientController::class, 'downloadInvoice'])->name('client.order_invoice');
 });
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+});
+
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
