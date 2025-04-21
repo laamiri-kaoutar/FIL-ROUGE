@@ -120,8 +120,18 @@
                                 </div>
                             @endforeach
                         </div>
+
+                        @php
+                            $hasActiveOrder = auth()->check() && $service->orders()
+                                ->where('user_id', auth()->id())
+                                ->where('package_id', $package->id)
+                                ->whereIn('status', ['pending', 'in_progress'])
+                                ->exists();
+                        @endphp
                         
-                        <!-- Package Button -->
+                        @if ($hasActiveOrder)
+                        <p class="text-gray-600 text-sm italic">You’ve already ordered this package. It’s currently in progress.</p>
+                        @else
                         <button 
                             class="w-full py-3 px-4 text-sm font-medium text-white bg-{{ $loop->index == 0 ? 'blue' : ($loop->index == 1 ? 'purple' : 'green') }}-600 rounded hover:bg-{{ $loop->index == 0 ? 'blue' : ($loop->index == 1 ? 'purple' : 'green') }}-700"
                             data-package-id="{{ $package->id }}"
@@ -131,6 +141,10 @@
                             onclick="selectPackage(this)">
                             Select {{ $package->name }} Package
                         </button>
+
+
+                        @endif
+                   
                     </div>
                 @endforeach
             </div>
