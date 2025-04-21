@@ -18,12 +18,11 @@ class ProfileController extends Controller
             'firstName' => 'required|string|max:255',
             'lastName' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . auth()->id(),
-            'profileImage' => 'nullable|image|max:2048', // Max 2MB
+            'profileImage' => 'nullable|image|max:2048', 
         ]);
 
         $user = auth()->user();
 
-        // Update name by combining first and last name
         $user->name = $validated['firstName'] . ' ' . $validated['lastName'];
         $user->email = $validated['email'];
 
