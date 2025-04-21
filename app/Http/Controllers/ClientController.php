@@ -159,7 +159,6 @@ class ClientController extends Controller
                 'service_id' => $service->id,
                 'package_id' => $package->id,
                 'amount' => $package->price,
-                'status' => 'completed',
                 'stripe_transaction_id' => $charge->id,
             ]);
             return redirect()->route('client.order_confirmation', $order->id)->with('success', 'Payment completed successfully!');

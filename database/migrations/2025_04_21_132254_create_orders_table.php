@@ -14,7 +14,7 @@ class CreateOrdersTable extends Migration
             $table->unsignedBigInteger('service_id');
             $table->unsignedBigInteger('package_id');
             $table->decimal('amount', 8, 2);
-            $table->string('status')->default('completed'); // Only create orders after successful payment
+            $table->enum('status', ['pending', 'in_progress', 'completed'])->default('pending');
             $table->string('stripe_transaction_id')->nullable();
             $table->timestamps();
 

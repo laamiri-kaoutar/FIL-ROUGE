@@ -62,6 +62,8 @@
                         <img src="{{ Auth::user()->profile_image ?? 'https://via.placeholder.com/40' }}" alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-gray-200">
                         <span class="text-gray-700 text-sm font-medium">{{ Auth::user()->name }}</span>
                     </a>
+
+                    
                     <a href="{{ route('logout') }}" class="text-gray-700 hover:text-gray-900 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-200 hover:bg-gray-100" 
                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
