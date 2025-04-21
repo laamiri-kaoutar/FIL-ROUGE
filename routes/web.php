@@ -7,6 +7,7 @@ use App\Http\Controllers\TagController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\CategoryController;
 
@@ -73,21 +74,15 @@ Route::get('/client/dashboard', function () {
     return view('client.dashboard');
 })->name('client.dashboard');
 
-Route::get('/client/profile', function () {
-    return view('client.profile');
-})->name('client.profile');
+// Route::get('/client/profile', function () {
+//     return view('client.profile');
+// })->name('client.profile');
 
-Route::get('/client/orders', function () {
-    return view('client.orders');
-})->name('client.orders');
 
 Route::get('/client/favorites', function () {
     return view('client.favorites');
 })->name('client.favorites');
 
-Route::get('/client/reviews', function () {
-    return view('client.reviews');
-})->name('client.reviews');
 
 
 // freelancer routes
@@ -150,6 +145,9 @@ Route::prefix('client')->middleware(['auth'])->group(function () {
     Route::post('/process-payment', [ClientController::class, 'processPayment'])->name('client.process_payment');
     Route::get('/order-confirmation/{order_id}', [ClientController::class, 'orderConfirmation'])->name('client.order_confirmation');
     Route::get('/order/{order_id}/invoice', [ClientController::class, 'downloadInvoice'])->name('client.order_invoice');
+    Route::get('/orders', [ClientController::class, 'orders'])->name('client.orders');
+    Route::get('/reviews', [ClientController::class, 'reviews'])->name('client.reviews');
+    Route::get('/favorites', [ClientController::class, 'favorites'])->name('client.favorites');
 });
 
 Route::middleware(['auth'])->group(function () {
