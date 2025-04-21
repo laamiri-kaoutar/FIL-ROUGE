@@ -10,6 +10,7 @@ use App\Services\InvoiceService;
 use App\Services\PaymentService;
 use App\Repositories\OrderRepository;
 use App\Repositories\ServiceRepository;
+use App\Interfaces\ReviewRepositoryInterface;
 
 class ClientController extends Controller
 {
@@ -17,17 +18,20 @@ class ClientController extends Controller
     protected $orderRepository;
     protected $paymentService;
     protected $invoiceService;
+    protected $reviewRepository;
 
     public function __construct(
         ServiceRepository $serviceRepository,
         OrderRepository $orderRepository,
         PaymentService $paymentService,
-        InvoiceService $invoiceService
+        InvoiceService $invoiceService,
+        ReviewRepositoryInterface $reviewRepository
     ) {
         $this->serviceRepository = $serviceRepository;
         $this->orderRepository = $orderRepository;
         $this->paymentService = $paymentService;
         $this->invoiceService = $invoiceService;
+        $this->reviewRepository = $reviewRepository;
     }
 
     public function services(Request $request)
@@ -52,7 +56,9 @@ class ClientController extends Controller
 
     public function toggleFavorite(Request $request, $id)
     {
+        // dd($id);
         $favorite = Favorite::where('user_id', auth()->id())->where('service_id', $id)->first();
+        dd($favorite);
 
         if ($favorite) {
             $favorite->delete();
@@ -73,7 +79,7 @@ class ClientController extends Controller
         ]);
         $service = $this->serviceRepository->find($id);
 
-        if ($service->reviews()->where('user_id', $user->id)->exists()) {
+        if ($service->reviews()->where('user_id',  auth()->id())->exists()) {
             return redirect()->back()->with('error', 'You have already reviewed this service.');
         }
 
@@ -117,6 +123,13 @@ class ClientController extends Controller
 
         $review->update($validated);
         $this->serviceRepository->updateRating($service_id);
+        // dd("untell now evry thing is fine ");
+
+        $referrer = request()->headers->get('referer');
+
+        if (str_contains($referrer, route('client.reviews'))) {
+            return redirect()->route('client.reviews')->with('success', 'Review updated successfully!');
+        }
         return redirect()->route('client.services.show', $service_id)->with('success', 'Review updated successfully!');
     }
 
@@ -130,6 +143,15 @@ class ClientController extends Controller
     
         $review->delete();
         $this->serviceRepository->updateRating($service_id);
+        // dd("untell now evry thing is fine ");
+
+        $referrer = request()->headers->get('referer');
+
+        // Check if the referrer contains the reviews page URL
+        if (str_contains($referrer, route('client.reviews'))) {
+            return redirect()->route('client.reviews')->with('success', 'Review updated successfully!');
+        }
+
         return redirect()->route('client.services.show', $service_id)->with('success', 'Review deleted successfully!');
     }
 
@@ -183,6 +205,28 @@ class ClientController extends Controller
         }
     
         return $this->invoiceService->generateInvoice($order);
+    }
+
+    public function orders()
+    {
+        $orders = $this->orderRepository->getUserOrders();
+        return view('client.orders', compact('orders'));
+    }
+
+    public function reviews()
+    {
+        $reviews = $this->reviewRepository->getUserReviews(auth()->id());
+        $completedOrders = $this->reviewRepository->getCompletedOrdersWithoutReviews(auth()->id());
+
+        return view('client.reviews', compact('reviews', 'completedOrders'));
+    }
+    public function favorites()
+    {
+        $favorites = auth()->user()->favorites()
+            ->with(['user', 'service' , 'service.tags'])
+            ->get();
+
+        return view('client.favorites', compact('favorites'));
     }
    
 }
