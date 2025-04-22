@@ -9,7 +9,7 @@ class ReviewController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        // $this->middleware('auth');
     }
 
     public function report(Request $request, $id)
@@ -28,7 +28,7 @@ class ReviewController extends Controller
         }
 
         $request->validate([
-            'reason' => 'required|in:Offensive,Spam,Misleading',
+            'reason' => 'required|string|max:255'
         ]);
 
         Signal::create([
