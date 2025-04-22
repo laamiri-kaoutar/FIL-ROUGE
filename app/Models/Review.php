@@ -17,4 +17,19 @@ class Review extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function signals()
+    {
+        return $this->hasMany(Signal::class);
+    }
+
+    public function signalCount()
+    {
+        return $this->signals()->count();
+    }
+
+    public function hasBeenSignaledByUser($userId)
+    {
+        return $this->signals()->where('user_id', $userId)->exists();
+    }
 }
