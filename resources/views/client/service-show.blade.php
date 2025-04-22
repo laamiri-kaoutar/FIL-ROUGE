@@ -217,22 +217,12 @@
                                                 @if ($review->hasBeenSignaledByUser(auth()->id()))
                                                     <p class="text-sm text-gray-500">You have already reported this review.</p>
                                                 @else
-                                                    <form action="{{ route('client.reviews.report', $review->id) }}" method="POST">
-                                                        @csrf
-                                                        <div class="flex items-center gap-2">
-                                                            <select name="reason" class="border border-gray-300 rounded p-1 text-sm">
-                                                                <option value="Offensive">Offensive</option>
-                                                                <option value="Spam">Spam</option>
-                                                                <option value="Misleading">Misleading</option>
-                                                            </select>
-                                                            <button type="submit" class="text-red-600 hover:text-red-800 text-sm font-medium flex items-center">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                                                </svg>
-                                                                Report
-                                                            </button>
-                                                        </form>
-                                                    </div>
+                                                    <button onclick="openReportModal({{ $review->id }})" class="text-red-600 hover:text-red-800 text-sm font-medium flex items-center">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                                        </svg>
+                                                        Report
+                                                    </button>
                                                 @endif
                                             @endif
                                         </div>
@@ -243,6 +233,24 @@
                     @empty
                         <p class="text-gray-600">No reviews yet.</p>
                     @endforelse
+
+                    <!-- Report Modal -->
+                    <div id="report-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+                        <div class="bg-white rounded-lg p-6 w-full max-w-md">
+                            <h3 class="text-lg font-medium mb-4">Report Review</h3>
+                            <form id="report-form" method="POST">
+                                @csrf
+                                <div class="mb-4">
+                                    <label for="reason" class="block text-gray-700 mb-2">Reason for Reporting</label>
+                                    <textarea id="reason" name="reason" class="w-full p-3 border border-gray-300 rounded" rows="3" placeholder="Please explain why you are reporting this review..." required></textarea>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Submit Report</button>
+                                    <button type="button" onclick="closeReportModal()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Add Review Form -->
@@ -496,6 +504,26 @@
                 }, 5000);
             }
         });
+
+        // Report Modal Functions
+        function openReportModal(reviewId) {
+            const modal = document.getElementById('report-modal');
+            const form = document.getElementById('report-form');
+            
+            // Set the form action dynamically with the review ID
+            form.action = `/client/reviews/${reviewId}/report`;
+            
+            // Clear the reason input
+            document.getElementById('reason').value = '';
+            
+            // Show the modal
+            modal.classList.remove('hidden');
+        }
+
+        function closeReportModal() {
+            const modal = document.getElementById('report-modal');
+            modal.classList.add('hidden');
+        }
     </script>
 
     
