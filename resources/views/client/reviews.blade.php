@@ -163,8 +163,6 @@
 
             // Set the form action dynamically with both serviceId and reviewId
             form.action = `/client/services/${serviceId}/reviews/${reviewId}`;
-
-            // Set the review ID and service ID
             reviewIdInput.value = reviewId;
             serviceIdInput.value = serviceId;
 
