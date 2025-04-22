@@ -132,13 +132,13 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/account-validation', [AdminController::class, 'accountValidation'])->name('admin.account-validation');
-    // Route::get('/categories', [AdminController::class, 'categories'])->name('admin.categories');
-    Route::get('/signals', [AdminController::class, 'reviews'])->name('admin.signals');
     Route::get('/reviews', [AdminController::class, 'reviews'])->name('admin.reviews');
-
     Route::get('/services', [AdminController::class, 'services'])->name('admin.services');
     Route::get('/orders', [AdminController::class, 'orders'])->name('admin.orders');
     Route::get('/transactions', [AdminController::class, 'transactions'])->name('admin.transactions');
+    Route::get('/signals', [AdminController::class, 'signals'])->name('admin.signals');
+    Route::delete('/signals/{id}/dismiss', [AdminController::class, 'dismissSignal'])->name('admin.signals.dismiss');
+    Route::delete('/signals/{id}/review', [AdminController::class, 'deleteReviewFromSignal'])->name('admin.signals.deleteReview');
 });
 
 
