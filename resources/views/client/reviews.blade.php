@@ -165,8 +165,6 @@
             form.action = `/client/services/${serviceId}/reviews/${reviewId}`;
             reviewIdInput.value = reviewId;
             serviceIdInput.value = serviceId;
-
-            // Set the comment
             commentTextarea.value = comment;
 
             // Set the rating by checking the appropriate radio button
