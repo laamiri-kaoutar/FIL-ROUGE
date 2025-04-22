@@ -46,7 +46,7 @@
             <h2 class="text-xl font-semibold text-gray-800 mb-4">Quick Actions</h2>
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 <!-- Manage Profile -->
-                <a href="{{ route('client.profile') }}" class="bg-white rounded-lg shadow p-5 flex items-center hover:shadow-md transition-shadow">
+                <a href="{{ route('profile.show') }}" class="bg-white rounded-lg shadow p-5 flex items-center hover:shadow-md transition-shadow">
                     <div class="w-10 h-10 rounded-full primary-gradient flex items-center justify-center flex-shrink-0">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />

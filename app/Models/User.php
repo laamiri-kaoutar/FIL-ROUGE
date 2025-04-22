@@ -54,8 +54,7 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
     public function favorites()
-{
-    return $this->hasMany(Favorite::class);
-}
-
+    {
+        return $this->belongsToMany(Service::class, 'favorites', 'user_id', 'service_id');
+    }
 }

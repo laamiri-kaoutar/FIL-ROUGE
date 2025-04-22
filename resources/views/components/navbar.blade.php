@@ -40,7 +40,7 @@
                             <a href="{{ route('client.services') }}" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors duration-200 {{ request()->routeIs('client.services') ? 'active' : '' }}">Services</a>
                             <a href="{{ route('client.favorites') }}" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors duration-200 {{ request()->routeIs('client.favorites') ? 'active' : '' }}">Favorites</a>
                             <a href="{{ route('client.orders') }}" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors duration-200 {{ request()->routeIs('client.orders') ? 'active' : '' }}">Order History</a>
-                            <a href="{{ route('client.reviews') }}" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors duration-200 {{ request()->routeIs('client.reviews') ? 'active' : '' }}">Reviews</a>
+                            <a href="{{ route('client.reviews' , Auth::user()->id) }}" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors duration-200 {{ request()->routeIs('client.reviews') ? 'active' : '' }}">Reviews</a>
                         @elseif (Auth::user()->role->name === 'freelancer')
                             <!-- Freelancer Links -->
                             <a href="{{ route('freelancer.services') }}" class="nav-link text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium transition-colors duration-200 {{ request()->routeIs('freelancer.services') ? 'active' : '' }}">My Services</a>
@@ -58,8 +58,8 @@
                     <a href="{{ route('register') }}" class="primary-gradient px-6 py-2.5 rounded-full text-sm font-medium text-white transition-all duration-200 hover:shadow-lg hover:shadow-purple-500/30 active:scale-95">Sign Up</a>
                 @else
                     <!-- User Profile Icon and Name -->
-                    <a href="{{ Auth::user()->role === 'client' ? route('client.profile') : route('freelancer.profile') }}" class="flex items-center space-x-2">
-                        <img src="{{ Auth::user()->profile_image ?? 'https://via.placeholder.com/40' }}" alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-gray-200">
+                    <a href="{{ Auth::user()->role->name === 'client' ? route('profile.show') : route('profile.show') }}" class="flex items-center space-x-2">
+                        <img src="{{ auth()->user()->image ? asset('storage/' . auth()->user()->image) : 'https://via.placeholder.com/100' }}" alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-gray-200">
                         <span class="text-gray-700 text-sm font-medium">{{ Auth::user()->name }}</span>
                     </a>
 
@@ -91,13 +91,13 @@
                     <a href="#categories" class="block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-base font-medium transition-colors duration-200">Categories</a>
                     <a href="#how-it-works" class="block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-base font-medium transition-colors duration-200">How It Works</a>
                 @else
-                    @if (Auth::user()->role === 'client')
+                    @if (Auth::user()->role->name === 'client')
                         <!-- Client Links -->
                         <a href="{{ route('client.services') }}" class="block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 {{ request()->routeIs('client.services') ? 'active' : '' }}">Services</a>
                         <a href="{{ route('client.favorites') }}" class="block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 {{ request()->routeIs('client.favorites') ? 'active' : '' }}">Favorites</a>
                         <a href="{{ route('client.orders') }}" class="block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 {{ request()->routeIs('client.orders') ? 'active' : '' }}">Order History</a>
-                        <a href="{{ route('client.reviews') }}" class="block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 {{ request()->routeIs('client.reviews') ? 'active' : '' }}">Reviews</a>
-                    @elseif (Auth::user()->role === 'freelancer')
+                        <a href="{{ route('client.reviews' , Auth::user()->id) }}" class="block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 {{ request()->routeIs('client.reviews') ? 'active' : '' }}">Reviews</a>
+                    @elseif (Auth::user()->role->name === 'freelancer')
                         <!-- Freelancer Links -->
                         <a href="{{ route('freelancer.services') }}" class="block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 {{ request()->routeIs('freelancer.services') ? 'active' : '' }}">My Services</a>
                         <a href="{{ route('freelancer.orders') }}" class="block text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 {{ request()->routeIs('freelancer.orders') ? 'active' : '' }}">Orders</a>

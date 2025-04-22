@@ -9,33 +9,34 @@ class ProfileController extends Controller
 {
     public function show()
     {
-        return view('client.profile');
+        return view('profile');
     }
 
     public function update(Request $request)
     {
+        // dd($request);
         $validated = $request->validate([
             'firstName' => 'required|string|max:255',
-            'lastName' => 'required|string|max:255',
+            // 'lastName' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . auth()->id(),
             'profileImage' => 'nullable|image|max:2048', 
         ]);
 
         $user = auth()->user();
 
-        $user->name = $validated['firstName'] . ' ' . $validated['lastName'];
+        $user->name = $validated['firstName'];
         $user->email = $validated['email'];
 
-        // Handle profile image upload
         if ($request->hasFile('profileImage')) {
-            // Delete old image if exists
-            if ($user->profile_photo_path) {
-                Storage::disk('public')->delete($user->profile_photo_path);
+            if ($user->image) {
+                Storage::disk('public')->delete($user->image);
             }
             $path = $request->file('profileImage')->store('profile_photos', 'public');
-            $user->profile_photo_path = $path;
-        }
+            $user->image = $path;
 
+        }
+        
+        // dd($user); 
         $user->save();
 
         return redirect()->route('profile.show')->with('success', 'Profile updated successfully!');

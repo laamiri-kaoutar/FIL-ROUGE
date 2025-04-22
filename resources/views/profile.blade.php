@@ -21,7 +21,7 @@
         <!-- Profile Card -->
         <div class="bg-white rounded-xl shadow-lg gradient-border p-6 sm:p-8 mb-6 sm:mb-8">
             <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-6 sm:mb-8">
-                <img id="profileImagePreview" src="{{ auth()->user()->profile_photo_path ? asset('storage/' . auth()->user()->profile_photo_path) : 'https://via.placeholder.com/100' }}" alt="Profile Image" class="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-4 border-gray-100 shadow-sm">
+                <img id="profileImagePreview" src="{{ auth()->user()->image ? asset('storage/' . auth()->user()->image) : 'https://via.placeholder.com/100' }}" alt="Profile Image" class="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-4 border-gray-100 shadow-sm">
                 <div class="text-center sm:text-left">
                     <h2 id="profileName" class="text-xl sm:text-2xl font-bold text-gray-900">{{ auth()->user()->name }}</h2>
                     <p id="profileEmail" class="text-gray-600 text-base sm:text-lg">{{ auth()->user()->email }}</p>

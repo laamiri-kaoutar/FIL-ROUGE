@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Order;
+use Illuminate\Support\Facades\Auth;
 use App\Interfaces\OrderRepositoryInterface;
 
 class OrderRepository implements OrderRepositoryInterface
@@ -16,4 +17,11 @@ class OrderRepository implements OrderRepositoryInterface
     {
         return Order::with(['user', 'service', 'package'])->findOrFail($id);
     }
+
+    public function getUserOrders()
+    {
+        return Order::where('user_id','=', Auth::id())->with(['service.user', 'package'])->get();
+    }
+
+
 }

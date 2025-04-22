@@ -58,7 +58,7 @@ class ClientController extends Controller
     {
         // dd($id);
         $favorite = Favorite::where('user_id', auth()->id())->where('service_id', $id)->first();
-        dd($favorite);
+        // dd($favorite);
 
         if ($favorite) {
             $favorite->delete();
@@ -67,6 +67,12 @@ class ClientController extends Controller
             Favorite::create(['user_id' =>auth()->id(), 'service_id' => $id]);
             $isFavorited = true;
         }
+        $referrer = request()->headers->get('referer');
+
+        if (str_contains($referrer, route('client.favorites'))) {
+            return redirect()->route('client.favorites')->with('success', 'Removed from favorites successfully!');
+        }
+
 
         return response()->json(['isFavorited' => $isFavorited]);
     }
@@ -147,7 +153,6 @@ class ClientController extends Controller
 
         $referrer = request()->headers->get('referer');
 
-        // Check if the referrer contains the reviews page URL
         if (str_contains($referrer, route('client.reviews'))) {
             return redirect()->route('client.reviews')->with('success', 'Review updated successfully!');
         }
@@ -223,9 +228,9 @@ class ClientController extends Controller
     public function favorites()
     {
         $favorites = auth()->user()->favorites()
-            ->with(['user', 'service' , 'service.tags'])
+            ->with(['user', 'category', 'tags', 'reviews'])
             ->get();
-
+    
         return view('client.favorites', compact('favorites'));
     }
    
