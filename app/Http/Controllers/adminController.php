@@ -10,4 +10,13 @@ class adminController extends Controller
     return view('admin.dashboard');
 
    }
+
+   public function reviews(){
+    return view('admin.reviews');
+   }
+
+   
+   public function services(){
+    return view('admin.services');
+   }
 }

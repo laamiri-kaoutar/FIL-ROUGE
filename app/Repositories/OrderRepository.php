@@ -23,5 +23,14 @@ class OrderRepository implements OrderRepositoryInterface
         return Order::where('user_id','=', Auth::id())->with(['service.user', 'package'])->get();
     }
 
+    public function getFreelancerOrders($freelancerId)
+    {
+        return Order::whereHas('service', function ($query) use ($freelancerId) {
+            $query->where('user_id', $freelancerId);
+        })
+        ->with(['service', 'user', 'package'])
+        ->get();
+    }
+
 
 }

@@ -64,7 +64,7 @@
 
         <!-- Change Password Button -->
         <div class="text-center mb-6 sm:mb-8">
-            <button id="changePasswordBtn" class="px-6 sm:px-8 py-2 sm:py-3 primary-gradient text-white rounded-lg hover:opacity-90 transition-colors font-semibold shadow-md">Change Password</button>
+            <a  href="{{ route('password.request') }}"  id="changePasswordBtn" class="px-6 sm:px-8 py-2 sm:py-3 primary-gradient text-white rounded-lg hover:opacity-90 transition-colors font-semibold shadow-md">Change Password</a>
         </div>
     </main>
 @endsection
