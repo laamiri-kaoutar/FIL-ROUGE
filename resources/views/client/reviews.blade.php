@@ -185,7 +185,6 @@
         function closeEditReviewModal() {
             const modal = document.getElementById('editReviewModal');
             modal.classList.add('hidden');
-            // Reset the form
             document.getElementById('editReviewForm').reset();
         }
     </script>
