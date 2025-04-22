@@ -7,9 +7,11 @@ use App\Http\Controllers\TagController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\FreelancerController;
 
 Route::get('/', function () {
     // return view('welcome');
@@ -58,30 +60,11 @@ Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])-
 Route::post('/reset-password', [AuthController::class, 'reset'])->name('password.update');
 // Clinets routes : 
 
-Route::get('/client/services', function () {
-    return view('client.services');
-})->name('client.services');
 
-Route::get('/client/services/{id}', function () {
-    return view('client.service-show');
-})->name('client.service.show');
-
-Route::get('/client/payment', function () {
-    return view('client.payment');
-})->name('client.payment');
 
 Route::get('/client/dashboard', function () {
     return view('client.dashboard');
 })->name('client.dashboard');
-
-// Route::get('/client/profile', function () {
-//     return view('client.profile');
-// })->name('client.profile');
-
-
-Route::get('/client/favorites', function () {
-    return view('client.favorites');
-})->name('client.favorites');
 
 
 
@@ -94,25 +77,12 @@ Route::get('/freelancer/transactions', function () {
     return view('freelancer.transactions');
 })->name('freelancer.transactions');
 
-Route::get('/freelancer/profile', function () {
-    return view('freelancer.profile');
-})->name('freelancer.profile');
+
 
 Route::get('/freelancer/demands', function () {
     return view('freelancer.demands');
 })->name('freelancer.demands');
 
-// Route::get('/freelancer/services', function () {
-//     return view('freelancer.services');
-// })->name('freelancer.services');
-
-Route::get('/freelancer/orders', function () {
-    return view('freelancer.orders');
-})->name('freelancer.orders');
-
-// Route::get('/freelancer/services/{id}/edit', function ($id) {
-//     return view('freelancer.service-edit');
-// })->name('freelancer.service.edit');
 
 
 // Admin Routes (prefix: /admin)
@@ -129,6 +99,8 @@ Route::prefix('freelancer')->middleware(['auth', 'freelancer'])->group(function 
     Route::post('/services/{id}/packages/{packageId}/features', [ServiceController::class, 'addFeature'])->name('services.addFeature');
     Route::delete('/services/{id}/packages/{packageId}/features/{featureId}', [ServiceController::class, 'deleteFeature'])->name('services.deleteFeature');   
     Route::delete('/services/{id}', [ServiceController::class, 'destroy'])->name('services.destroy');
+    Route::get('/orders', [FreelancerController::class, 'orders'])->name('freelancer.orders');
+    Route::post('/orders/{id}/update-status', [FreelancerController::class, 'updateOrderStatus'])->name('freelancer.orders.update-status');
     
 });
 
@@ -148,6 +120,7 @@ Route::prefix('client')->middleware(['auth'])->group(function () {
     Route::get('/orders', [ClientController::class, 'orders'])->name('client.orders');
     Route::get('/reviews', [ClientController::class, 'reviews'])->name('client.reviews');
     Route::get('/favorites', [ClientController::class, 'favorites'])->name('client.favorites');
+    Route::post('/reviews/{id}/report', [ReviewController::class, 'report'])->name('client.reviews.report');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -160,7 +133,9 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/account-validation', [AdminController::class, 'accountValidation'])->name('admin.account-validation');
     // Route::get('/categories', [AdminController::class, 'categories'])->name('admin.categories');
-    Route::get('/signals', [AdminController::class, 'signals'])->name('admin.signals');
+    Route::get('/signals', [AdminController::class, 'reviews'])->name('admin.signals');
+    Route::get('/reviews', [AdminController::class, 'reviews'])->name('admin.reviews');
+
     Route::get('/services', [AdminController::class, 'services'])->name('admin.services');
     Route::get('/orders', [AdminController::class, 'orders'])->name('admin.orders');
     Route::get('/transactions', [AdminController::class, 'transactions'])->name('admin.transactions');
@@ -183,13 +158,3 @@ Route::prefix('tags')->group(function () {
     Route::delete('/{id}', [TagController::class, 'destroy'])->name('tags.destroy');
 });
 
-
-// Route::prefix('admin')->group(function () {
-//     Route::get('/tags', [TagController::class, 'index'])->name('admin.tags');
-
-//     Route::post('/tags', [TagController::class, 'store'])->name('tags.store');
-
-//     Route::get('/tags/${id}/edit',  [TagController::class, 'edit'])->name('tags.edit');
-//     Route::put('/tags/{tag}', [TagController::class, 'update'])->name('tags.update');
-//     Route::delete('/tags/{tag}', [TagController::class, 'destroy'])->name('tags.destroy');
-// });
