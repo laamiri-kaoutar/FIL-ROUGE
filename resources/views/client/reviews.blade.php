@@ -167,7 +167,6 @@
             serviceIdInput.value = serviceId;
             commentTextarea.value = comment;
 
-            // Set the rating by checking the appropriate radio button
             const ratingInputs = document.querySelectorAll('input[name="rating"]');
             ratingInputs.forEach(input => {
                 if (parseInt(input.value) === rating) {
