@@ -179,7 +179,6 @@
                 }
             });
 
-            // Show the modal
             modal.classList.remove('hidden');
         }
 
