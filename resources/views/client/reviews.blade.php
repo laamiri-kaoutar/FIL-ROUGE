@@ -117,12 +117,10 @@
                                 @endfor
                             </div>
                         </div>
-                        <!-- Edit Review comment -->
                         <div>
                             <label for="editReviewComment" class="block text-sm font-medium text-gray-700">Your Review</label>
                             <textarea id="editReviewComment" name="comment" rows="4" class="mt-1 block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md" required></textarea>
                         </div>
-                        <!-- Submit button -->
                         <div class="text-right">
                             <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white primary-gradient hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 Save Changes
