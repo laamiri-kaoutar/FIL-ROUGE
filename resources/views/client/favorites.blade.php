@@ -26,12 +26,12 @@
 
         <!-- Favorites List -->
         @if ($favorites->isNotEmpty())
-            <div id="favorites-list" class="flex flex-wrap gap-6">
-                @foreach ($favorites as $service)
-                    <div class="bg-white rounded-lg shadow-md min-w-[250px] flex-1">
+            <div id="favorites-list" class="flex flex-wrap gap-6 justify-center">
+                @foreach ($favorites as $favorite)
+                    <div class="bg-white rounded-lg shadow-md min-w-[250px] max-w-sm">
                         <div class="primary-gradient h-3 rounded-t-lg"></div>
                         <div class="p-4">
-                            <h3 class="text-base font-semibold text-gray-800 mb-2">{{ $service->title }}</h3>
+                            <h3 class="text-base font-semibold text-gray-800 mb-2">{{ $favorite->title }}</h3>
                             <div class="flex items-center mb-2">
                                 <div class="flex text-yellow-400 mr-1">
                                     @for ($i = 1; $i <= 5; $i++)
@@ -40,23 +40,23 @@
                                         </svg>
                                     @endfor
                                 </div>
-                                <span class="text-gray-700 font-medium text-sm">{{ number_format($service->reviews->avg('rating') ?? 0, 1) }}</span>
+                                <span class="text-gray-700 font-medium text-sm">{{ number_format($favorite->reviews->avg('rating') ?? 0, 1) }}</span>
                             </div>
-                            <p class="text-gray-600 mb-2 text-sm">Freelancer: {{ $service->user->name }}</p>
+                            <p class="text-gray-600 mb-2 text-sm">Freelancer: {{ $favorite->user->name }}</p>
                             <!-- Tags -->
                             <div class="flex flex-wrap gap-1 mb-2">
-                                @foreach ($service->tags as $tag)
+                                @foreach ($favorite->tags as $tag)
                                     <span class="px-2 py-0.5 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">{{ $tag->name }}</span>
                                 @endforeach
                             </div>
                             <!-- Category -->
                             <div class="text-sm text-gray-500 mb-2">
-                                Category: <span class="font-medium text-gray-700">{{ $service->category->name }}</span>
+                                Category: <span class="font-medium text-gray-700">{{ $favorite->category->name }}</span>
                             </div>
                             <div class="flex flex-col sm:flex-row gap-2">
-                                <a href="{{ route('client.services.show', $service->id) }}" class="flex-1 px-3 py-1.5 bg-purple-600 text-white text-center rounded-md hover:bg-purple-700 transition text-sm">View Service</a>
-                                <button type="button" onclick="confirmRemove({{ $service->id }})" class="remove-favorite-btn flex-1 px-3 py-1.5 bg-white border border-red-500 text-red-500 text-center rounded-md hover:bg-red-50 transition text-sm" data-service-id="{{ $service->id }}">Remove from Favorites</button>
-                                <form id="remove-form-{{ $service->id }}" action="{{ route('client.services.favorite', $service->id) }}" method="POST" style="display: none;">
+                                <a href="{{ route('client.services.show', $favorite->id) }}" class="flex-1 px-3 py-1.5 bg-purple-600 text-white text-center rounded-md hover:bg-purple-700 transition text-sm">View Service</a>
+                                <button type="button" onclick="confirmRemove({{ $favorite->id }})" class="remove-favorite-btn flex-1 px-3 py-1.5 bg-white border border-red-500 text-red-500 text-center rounded-md hover:bg-red-50 transition text-sm" data-service-id="{{ $favorite->id }}">Remove from Favorites</button>
+                                <form id="remove-form-{{ $favorite->id }}" action="{{ route('client.services.favorite', $favorite->id) }}" method="POST" style="display: none;">
                                     @csrf
                                 </form>
                             </div>
