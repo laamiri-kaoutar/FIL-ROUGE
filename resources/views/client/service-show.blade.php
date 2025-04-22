@@ -168,38 +168,78 @@
 
                 <!-- Review Items -->
                 <div class="space-y-6 mb-8">
-                    @forelse ($service->reviews as $review)
-                        <div class="flex gap-4 pb-6 border-b border-gray-100">
-                            <img src="{{ $review->user->profile_photo_path ? asset('storage/' . $review->user->profile_photo_path) : 'https://via.placeholder.com/50' }}" 
-                                alt="{{ $review->user->name }}" 
-                                class="w-12 h-12 rounded-full">
-                            <div class="flex-1">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <h4 class="font-medium">{{ $review->user->name }}</h4>
-                                    <span class="text-yellow-400">
-                                        @for ($i = 0; $i < 5; $i++)
-                                            {{ $i < $review->rating ? '★' : '☆' }}
-                                        @endfor
-                                    </span>
-                                </div>
-                                <p class="text-sm text-gray-500 mb-2">{{ $review->created_at->diffForHumans() }}</p>
-                                <p class="text-gray-600">
-                                    {{ $review->comment ?? 'No comment provided.' }}
-                                </p>
-                                @auth
-                                    @if ($review->user_id === auth()->id())
-                                        <div class="mt-2 flex gap-2">
-                                            <button onclick="openEditReviewModal({{ $review->id }})" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Edit</button>
-                                            <form id="delete-review-form-{{ $review->id }}" action="{{ route('client.services.reviews.delete', [$service->id, $review->id]) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" onclick="confirmDeleteReview({{ $review->id }})" class="text-red-600 hover:text-red-800 text-sm font-medium">Delete</button>
-                                            </form>
-                                        </div>
-                                    @endif
-                                @endauth
-                            </div>
+                    <!-- Success/Error Messages -->
+                    @if (session('success'))
+                        <div id="success-message" class="mb-6 p-4 bg-green-100 text-green-800 rounded-lg">
+                            {{ session('success') }}
                         </div>
+                    @endif
+                    @if (session('error'))
+                        <div id="error-message" class="mb-6 p-4 bg-red-100 text-red-800 rounded-lg">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
+                    @forelse ($service->reviews as $review)
+                        @if ($review->signalCount() < 3) <!-- Hide reviews with 3+ signals -->
+                            <div class="flex gap-4 pb-6 border-b border-gray-100">
+                                <img src="{{ $review->user->profile_photo_path ? asset('storage/' . $review->user->profile_photo_path) : 'https://via.placeholder.com/50' }}" 
+                                    alt="{{ $review->user->name }}" 
+                                    class="w-12 h-12 rounded-full">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <h4 class="font-medium">{{ $review->user->name }}</h4>
+                                        <span class="text-yellow-400">
+                                            @for ($i = 0; $i < 5; $i++)
+                                                {{ $i < $review->rating ? '★' : '☆' }}
+                                            @endfor
+                                        </span>
+                                    </div>
+                                    <p class="text-sm text-gray-500 mb-2">{{ $review->created_at->diffForHumans() }}</p>
+                                    <p class="text-gray-600">
+                                        {{ $review->comment ?? 'No comment provided.' }}
+                                    </p>
+                                    @auth
+                                        <div class="mt-2 flex flex-col gap-2">
+                                            <!-- Edit/Delete Buttons for Owner -->
+                                            @if ($review->user_id === auth()->id())
+                                                <div class="flex gap-2">
+                                                    <button onclick="openEditReviewModal({{ $review->id }})" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Edit</button>
+                                                    <form id="delete-review-form-{{ $review->id }}" action="{{ route('client.services.reviews.delete', [$service->id, $review->id]) }}" method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button" onclick="confirmDeleteReview({{ $review->id }})" class="text-red-600 hover:text-red-800 text-sm font-medium">Delete</button>
+                                                    </form>
+                                                </div>
+                                            @endif
+                                            <!-- Report Button -->
+                                            @if ($review->user_id !== auth()->id()) <!-- Prevent reporting own review -->
+                                                @if ($review->hasBeenSignaledByUser(auth()->id()))
+                                                    <p class="text-sm text-gray-500">You have already reported this review.</p>
+                                                @else
+                                                    <form action="{{ route('client.reviews.report', $review->id) }}" method="POST">
+                                                        @csrf
+                                                        <div class="flex items-center gap-2">
+                                                            <select name="reason" class="border border-gray-300 rounded p-1 text-sm">
+                                                                <option value="Offensive">Offensive</option>
+                                                                <option value="Spam">Spam</option>
+                                                                <option value="Misleading">Misleading</option>
+                                                            </select>
+                                                            <button type="submit" class="text-red-600 hover:text-red-800 text-sm font-medium flex items-center">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                                                </svg>
+                                                                Report
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                @endif
+                                            @endif
+                                        </div>
+                                    @endauth
+                                </div>
+                            </div>
+                        @endif
                     @empty
                         <p class="text-gray-600">No reviews yet.</p>
                     @endforelse
@@ -439,5 +479,24 @@
                 closeEditReviewModal();
             }
         });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const successMessage = document.getElementById('success-message');
+            const errorMessage = document.getElementById('error-message');
+
+            if (successMessage) {
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 5000);
+            }
+
+            if (errorMessage) {
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 5000);
+            }
+        });
     </script>
+
+    
 @endsection
