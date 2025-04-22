@@ -161,7 +161,6 @@
             const serviceIdInput = document.getElementById('editServiceId');
             const commentTextarea = document.getElementById('editReviewComment');
 
-            // Set the form action dynamically with both serviceId and reviewId
             form.action = `/client/services/${serviceId}/reviews/${reviewId}`;
             reviewIdInput.value = reviewId;
             serviceIdInput.value = serviceId;
