@@ -132,7 +132,6 @@
                     }, 3000);
                 }
 
-                // Attach search bar functionality to the existing search input in the layout
                 const searchInput = document.querySelector('input[placeholder="Search users..."]');
                 searchInput.addEventListener('keypress', function (e) {
                     if (e.key === 'Enter') {
