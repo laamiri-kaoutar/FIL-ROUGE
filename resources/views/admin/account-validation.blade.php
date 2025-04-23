@@ -116,7 +116,6 @@
 
     @section('scripts')
         <script>
-            // Auto-hide success/error messages after 5 seconds
             document.addEventListener('DOMContentLoaded', function () {
                 const successMessage = document.getElementById('success-message');
                 const errorMessage = document.getElementById('error-message');
@@ -124,13 +123,13 @@
                 if (successMessage) {
                     setTimeout(() => {
                         successMessage.style.display = 'none';
-                    }, 5000);
+                    }, 3000);
                 }
 
                 if (errorMessage) {
                     setTimeout(() => {
                         errorMessage.style.display = 'none';
-                    }, 5000);
+                    }, 3000);
                 }
 
                 // Attach search bar functionality to the existing search input in the layout
