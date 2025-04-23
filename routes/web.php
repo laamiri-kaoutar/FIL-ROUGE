@@ -140,6 +140,11 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::delete('/signals/{id}/review', [AdminController::class, 'deleteReviewFromSignal'])->name('admin.signals.deleteReview');
     Route::get('/reviews', [AdminController::class, 'reviews'])->name('admin.reviews');
     Route::delete('/reviews/{id}', [AdminController::class, 'deleteReview'])->name('admin.reviews.delete');
+    Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::post('/users/{id}/suspend', [AdminController::class, 'suspendUser'])->name('admin.users.suspend');
+    Route::post('/users/{id}/ban', [AdminController::class, 'banUser'])->name('admin.users.ban');
+    Route::post('/users/{id}/unban', [AdminController::class, 'unbanUser'])->name('admin.users.unban');
+    Route::delete('/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.users.delete');
 });
 
 
