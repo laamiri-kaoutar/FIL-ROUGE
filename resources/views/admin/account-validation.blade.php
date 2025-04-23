@@ -30,13 +30,15 @@
 
         <!-- Filter and Search -->
         <form method="GET" action="{{ route('admin.users') }}" class="flex flex-col sm:flex-row gap-4 mb-6">
-            <select name="status" class="border border-gray-300 rounded-lg p-2 w-full sm:w-48 focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+            <select id="status-filter" name="status" class="border border-gray-300 rounded-lg p-2 w-full sm:w-48 focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
                 <option value="All Statuses" {{ request('status', 'All Statuses') === 'All Statuses' ? 'selected' : '' }}>All Statuses</option>
                 <option value="Active" {{ request('status') === 'Active' ? 'selected' : '' }}>Active</option>
                 <option value="Suspended" {{ request('status') === 'Suspended' ? 'selected' : '' }}>Suspended</option>
                 <option value="Banned" {{ request('status') === 'Banned' ? 'selected' : '' }}>Banned</option>
             </select>
         </form>
+
+        
 
         <!-- User Table -->
         <div class="overflow-x-auto">
@@ -130,6 +132,14 @@
                     setTimeout(() => {
                         errorMessage.style.display = 'none';
                     }, 3000);
+                }
+
+                // Auto-submit the filter form when the status dropdown changes
+                const statusFilter = document.getElementById('status-filter');
+                if (statusFilter) {
+                    statusFilter.addEventListener('change', function () {
+                        this.form.submit();
+                    });
                 }
 
                 const searchInput = document.getElementById('searchInput');
