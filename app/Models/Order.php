@@ -29,4 +29,9 @@ class Order extends Model
     {
         return $this->belongsTo(ServicePackage::class, 'package_id');
     }
+
+    public function freelancer()
+    {
+        return $this->hasOneThrough(User::class, Service::class, 'id', 'id', 'service_id', 'user_id');
+    }
 }
