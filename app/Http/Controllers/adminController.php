@@ -36,11 +36,11 @@ class adminController extends Controller
         return view('admin.signals', compact('signals'));
     }
 
-    public function dismissSignal($id)
-    {
-        $this->signalRepository->deleteById($id);
-        return redirect()->route('admin.signals')->with('success', 'Signal dismissed successfully.');
-    }
+    // public function dismissSignal($id)
+    // {
+    //     $this->signalRepository->deleteById($id);
+    //     return redirect()->route('admin.signals')->with('success', 'Signal dismissed successfully.');
+    // }
 
     public function deleteReviewFromSignal($id)
     {
