@@ -10,72 +10,102 @@
             <h2 class="text-lg font-semibold text-gray-800">Manage Services</h2>
         </div>
 
+        <!-- Filters -->
+        <form method="GET" action="{{ route('admin.services') }}" class="flex flex-col sm:flex-row gap-4 mb-6">
+            <input type="hidden" name="search" value="{{ request('search') }}">
+            <select id="status-filter" name="status" class="border border-gray-300 rounded-lg p-2 w-full sm:w-48 focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                <option value="All Statuses" {{ request('status', 'All Statuses') === 'All Statuses' ? 'selected' : '' }}>All Statuses</option>
+                <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
+                <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+            </select>
+            <select id="category-filter" name="category_id" class="border border-gray-300 rounded-lg p-2 w-full sm:w-48 focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                <option value="All Categories" {{ request('category_id', 'All Categories') === 'All Categories' ? 'selected' : '' }}>All Categories</option>
+                @foreach ($categories as $category)
+                    <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                @endforeach
+            </select>
+        </form>
+
         <!-- Services Table -->
         <div class="overflow-x-auto">
-            <table class="w-full text-left">
-                <thead>
-                    <tr class="border-b border-gray-200">
-                        <th class="py-3 px-4 text-sm font-semibold text-gray-700">Title</th>
-                        <th class="py-3 px-4 text-sm font-semibold text-gray-700">Freelancer</th>
-                        <th class="py-3 px-4 text-sm font-semibold text-gray-700">Category</th>
-                        <th class="py-3 px-4 text-sm font-semibold text-gray-700">Status</th>
-                        <th class="py-3 px-4 text-sm font-semibold text-gray-700">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="border-b border-gray-100 hover:bg-gray-50">
-                        <td class="py-4 px-4 text-gray-700">Web Development</td>
-                        <td class="py-4 px-4 text-gray-700">John Doe</td>
-                        <td class="py-4 px-4 text-gray-700">Development</td>
-                        <td class="py-4 px-4 text-gray-700">Active</td>
-                        <td class="py-4 px-4 flex gap-2">
-                            <button class="approveBtn px-3 py-1 text-sm text-green-600 bg-green-100 rounded-lg hover:bg-green-200" data-service-id="1">Approve</button>
-                            <button class="rejectBtn px-3 py-1 text-sm text-red-600 bg-red-100 rounded-lg hover:bg-red-200" data-service-id="1">Reject</button>
-                        </td>
-                    </tr>
-                    <tr class="border-b border-gray-100 hover:bg-gray-50">
-                        <td class="py-4 px-4 text-gray-700">Graphic Design</td>
-                        <td class="py-4 px-4 text-gray-700">Jane Smith</td>
-                        <td class="py-4 px-4 text-gray-700">Design</td>
-                        <td class="py-4 px-4 text-gray-700">Pending</td>
-                        <td class="py-4 px-4 flex gap-2">
-                            <button class="approveBtn px-3 py-1 text-sm text-green-600 bg-green-100 rounded-lg hover:bg-green-200" data-service-id="2">Approve</button>
-                            <button class="rejectBtn px-3 py-1 text-sm text-red-600 bg-red-100 rounded-lg hover:bg-red-200" data-service-id="2">Reject</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            @if ($services->isNotEmpty())
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="border-b border-gray-200">
+                            <th class="py-3 px-4 text-sm font-semibold text-gray-700">Title</th>
+                            <th class="py-3 px-4 text-sm font-semibold text-gray-700">Freelancer</th>
+                            <th class="py-3 px-4 text-sm font-semibold text-gray-700">Category</th>
+                            <th class="py-3 px-4 text-sm font-semibold text-gray-700">Rating</th>
+                            <th class="py-3 px-4 text-sm font-semibold text-gray-700">Status</th>
+                            <th class="py-3 px-4 text-sm font-semibold text-gray-700">Created At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($services as $service)
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-4 px-4 text-gray-700">{{ $service->title }}</td>
+                                <td class="py-4 px-4 text-gray-700">{{ $service->user->name ?? 'N/A' }}</td>
+                                <td class="py-4 px-4 text-gray-700">{{ $service->category->name ?? 'N/A' }}</td>
+                                <td class="py-4 px-4 text-gray-700">{{ number_format($service->rating, 1) }}/5</td>
+                                <td class="py-4 px-4">
+                                    @if ($service->status === 'active')
+                                        <span class="inline-block px-2 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">Active</span>
+                                    @elseif ($service->status === 'inactive')
+                                        <span class="inline-block px-2 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full">Inactive</span>
+                                    @endif
+                                </td>
+                                <td class="py-4 px-4 text-gray-700">{{ $service->created_at->format('M d, Y') }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @else
+                <div class="text-center py-8">
+                    <p class="text-gray-600">No services found.</p>
+                </div>
+            @endif
         </div>
 
         <!-- Pagination -->
-        <div class="mt-6 flex justify-center gap-3">
-            <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100">Previous</button>
-            <button class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg">1</button>
-            <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100">2</button>
-            <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100">Next</button>
+        <div class="mt-6">
+            {{ $services->appends(request()->query())->links('pagination::tailwind') }}
         </div>
     </div>
-@endsection
 
-@section('scripts')
-    <script>
-        const approveButtons = document.querySelectorAll('.approveBtn');
-        const rejectButtons = document.querySelectorAll('.rejectBtn');
+    @section('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+               
+                const searchInput = document.querySelector('input[placeholder="Search services..."]');
+                if (searchInput) {
+                    searchInput.addEventListener('keypress', function (e) {
+                        if (e.keyCode == 13) { // 13 is the keyCode for Enter
+                            e.preventDefault();
+                            var searchTerm = this.value.trim();
+                            if (searchTerm) {
+                                window.location.href = '/admin/services?search=' + encodeURIComponent(searchTerm);
+                            } else {
+                                window.location.href = '/admin/services';
+                            }
+                        }
+                    });
+                }
 
-        approveButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const serviceId = button.getAttribute('data-service-id');
-                console.log(`Approving service ID: ${serviceId}`);
-                // Add your backend fetch logic here, e.g., fetch(`/admin/services/${serviceId}/approve`, { method: 'POST' })
+                const statusFilter = document.getElementById('status-filter');
+                const categoryFilter = document.getElementById('category-filter');
+
+                if (statusFilter) {
+                    statusFilter.addEventListener('change', function () {
+                        this.form.submit();
+                    });
+                }
+
+                if (categoryFilter) {
+                    categoryFilter.addEventListener('change', function () {
+                        this.form.submit();
+                    });
+                }
             });
-        });
-
-        rejectButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const serviceId = button.getAttribute('data-service-id');
-                console.log(`Rejecting service ID: ${serviceId}`);
-                // Add your backend fetch logic here, e.g., fetch(`/admin/services/${serviceId}/reject`, { method: 'POST' })
-            });
-        });
-    </script>
-@endsection
+        </script>
+    @endsection
+@endsection 
