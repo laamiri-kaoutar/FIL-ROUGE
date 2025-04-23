@@ -4,11 +4,10 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Interfaces\UserRepositoryInterface;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserRepository implements UserRepositoryInterface
 {
-    public function getAllWithFilters($search = null, $status = null, $perPage = 10): LengthAwarePaginator
+    public function getAllWithFilters($search = null, $status = null, $perPage = 10)
     {
         $query = User::query();
 

@@ -32,7 +32,7 @@ class OrderRepository implements OrderRepositoryInterface
         ->get();
     }
 
-    public function getAllWithFilters($search = null, $status = null, $perPage = 10): LengthAwarePaginator
+    public function getAllWithFilters($search = null, $status = null, $perPage = 10)
     {
         $query = Order::with(['user', 'service', 'package', 'freelancer']);
 

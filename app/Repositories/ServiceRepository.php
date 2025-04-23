@@ -143,4 +143,50 @@ class ServiceRepository implements ServiceRepositoryInterface
             'rating' => $service->reviews()->avg('rating') ?? 0,
         ]);
     }
+
+    public function getAllWithFilters($search = null, $status = null, $category_id = null, $perPage = 10)
+    {
+        $query = Service::with(['user', 'category']);
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhereHas('user', function ($q) use ($search) {
+                      $q->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        if ($status && $status !== 'All Statuses') {
+            $query->where('status', $status);
+        }
+
+        if ($category_id && $category_id !== 'All Categories') {
+            $query->where('category_id', $category_id);
+        }
+
+        return $query->orderBy('created_at', 'desc')->paginate($perPage);
+    }
+
+    public function getServicesByCategory($status = null)
+{
+    $query = Service::select('categories.name as category_name')
+        ->selectRaw('COUNT(services.id) as service_count')
+        ->join('categories', 'services.category_id', '=', 'categories.id')
+        ->groupBy('categories.name');
+
+    if ($status && $status !== 'All Statuses') {
+        $query->where('services.status', $status);
+    }
+
+    return $query->get();
+}
+
+public function getServiceStatusDistribution()
+{
+    return Service::select('status')
+        ->selectRaw('COUNT(*) as count')
+        ->groupBy('status')
+        ->get();
+}
 }
