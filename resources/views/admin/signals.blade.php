@@ -65,15 +65,15 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex gap-2">
-                                        <form action="{{ route('admin.signals.dismiss', $signal->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to dismiss this signal?');">
+                                        <form id="dismiss-form-{{ $signal->id }}" action="{{ route('admin.signals.dismiss', $signal->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-gray-600 hover:text-gray-800">Dismiss</button>
+                                            <button type="button" onclick="confirmAction('Are you sure you want to dismiss this signal?', 'dismiss-form-{{ $signal->id }}')" class="text-gray-600 hover:text-gray-800">Dismiss</button>
                                         </form>
-                                        <form action="{{ route('admin.signals.deleteReview', $signal->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this review? This will remove all associated signals.');">
+                                        <form id="delete-review-form-{{ $signal->id }}" action="{{ route('admin.signals.deleteReview', $signal->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-800">Delete Review</button>
+                                            <button type="button" onclick="confirmAction('Are you sure you want to delete this review? This will remove all associated signals.', 'delete-review-form-{{ $signal->id }}')" class="text-red-600 hover:text-red-800">Delete Review</button>
                                         </form>
                                     </div>
                                 </td>
@@ -113,6 +113,23 @@
                     }, 5000);
                 }
             });
+
+            function confirmAction(message, formId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: message,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, proceed!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(formId).submit();
+                }
+            });
+        }
         </script>
     @endsection
 @endsection
