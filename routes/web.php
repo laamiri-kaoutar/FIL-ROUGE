@@ -131,7 +131,7 @@ Route::middleware(['auth'])->group(function () {
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    Route::get('/account-validation', [AdminController::class, 'accountValidation'])->name('admin.account-validation');
+    // Route::get('/account-validation', [AdminController::class, 'accountValidation'])->name('admin.account-validation');
     Route::get('/services', [AdminController::class, 'services'])->name('admin.services');
     Route::get('/orders', [AdminController::class, 'orders'])->name('admin.orders');
     Route::get('/transactions', [AdminController::class, 'transactions'])->name('admin.transactions');

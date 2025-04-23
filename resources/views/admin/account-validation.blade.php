@@ -56,7 +56,7 @@
                             <tr class="border-b border-gray-100 hover:bg-gray-50">
                                 <td class="py-4 px-4 text-gray-700">{{ $user->name }}</td>
                                 <td class="py-4 px-4 text-gray-700">{{ $user->email }}</td>
-                                <td class="py-4 px-4 text-gray-700">{{ $user->role }}</td>
+                                <td class="py-4 px-4 text-gray-700">{{ $user->role->name }}</td>
                                 <td class="py-4 px-4">
                                     @if ($user->status === 'Active')
                                         <span class="inline-block px-2 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">Active</span>
@@ -132,14 +132,14 @@
                     }, 3000);
                 }
 
-                // Attach search bar functionality to the existing search input in the layout
-                const searchInput = document.querySelector('input[placeholder="Search users..."]');
+                const searchInput = document.getElementById('searchInput');
                 searchInput.addEventListener('keypress', function (e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
-                        const url = new URL(window.location.href);
-                        url.searchParams.set('search', this.value);
-                        window.location.href = url.toString();
+                        var searchTerm = this.value.trim();
+                        if (searchTerm) {
+                            window.location.href = '/admin/users?search=' + encodeURIComponent(searchTerm);
+                        }
                     }
                 });
             });

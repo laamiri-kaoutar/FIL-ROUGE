@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Interfaces\UserRepositoryInterface;
 use App\Interfaces\ReviewRepositoryInterface;
@@ -71,11 +72,18 @@ class adminController extends Controller
 
         $users = $this->userRepository->getAllWithFilters($search, $status);
         $totalUsers = User::count();
-        $totalFreelancers = User::where('role', 'Freelancer')->count();
-        $totalClients = User::where('role', 'Client')->count();
+        $totalFreelancers = User::join('roles', 'users.role_id', '=', 'roles.id')
+        ->where('roles.name', 'Freelancer')
+        ->count();
+    
+        $totalClients = User::join('roles', 'users.role_id', '=', 'roles.id')
+        ->where('roles.name', 'Client')
+        ->count();
+    
+      
         $bannedUsers = User::where('status', 'Banned')->count();
 
-        return view('admin.users.index', compact('users', 'totalUsers', 'totalFreelancers', 'totalClients', 'bannedUsers'));
+        return view('admin.account-validation', compact('users', 'totalUsers', 'totalFreelancers', 'totalClients', 'bannedUsers'));
     }
 
     public function suspendUser($id)
