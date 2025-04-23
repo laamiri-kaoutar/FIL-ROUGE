@@ -168,8 +168,6 @@ class ClientController extends Controller
         return view('client.payment', compact('service', 'package'));
     }
 
-
-    
     public function processPayment(Request $request)
     {
         $request->validate([
