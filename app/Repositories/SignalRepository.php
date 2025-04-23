@@ -11,6 +11,7 @@ class SignalRepository implements SignalRepositoryInterface
     {
         return Signal::with(['review.user', 'review.service', 'user'])
             ->orderBy('created_at', 'desc')
+            ->groupBy('review_id')
             ->get();
     }
 

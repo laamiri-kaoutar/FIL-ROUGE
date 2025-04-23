@@ -7,4 +7,5 @@ interface ReviewRepositoryInterface
     public function getUserReviews($userId);
 
     public function getCompletedOrdersWithoutReviews($userId);
+    public function getAllWithRelations();
 }

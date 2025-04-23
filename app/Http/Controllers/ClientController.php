@@ -181,7 +181,7 @@ class ClientController extends Controller
         try {
             $charge = $this->paymentService->charge($package->price, $request->stripeToken);
             // dd($charge);
-            $order = $this->orderRepository->create([
+            $order = $this->orderRepository->create([ 
                 'user_id' => auth()->id(),
                 'service_id' => $service->id,
                 'package_id' => $package->id,

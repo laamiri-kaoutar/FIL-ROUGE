@@ -3,28 +3,31 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Interfaces\ReviewRepositoryInterface;
 use App\Interfaces\SignalRepositoryInterface;
 
 class adminController extends Controller
 {
     protected $signalRepository;
+    protected $reviewRepository;
 
-    public function __construct(SignalRepositoryInterface $signalRepository)
+    public function __construct(SignalRepositoryInterface $signalRepository , ReviewRepositoryInterface $reviewRepository)
     {
         $this->signalRepository = $signalRepository;
+        $this->reviewRepository = $reviewRepository;
     }
    public function dashboard(){
     return view('admin.dashboard');
 
    }
 
-   public function reviews(){
-    return view('admin.reviews');
+   public function services(){
+    return view('admin.services');
    }
 
    
-   public function services(){
-    return view('admin.services');
+   public function orders(){
+    return view('admin.orders');
    }
 
    public function signals()
@@ -43,5 +46,17 @@ class adminController extends Controller
     {
         $this->signalRepository->deleteReviewFromSignal($id);
         return redirect()->route('admin.signals')->with('success', 'Review deleted successfully.');
+    }
+
+    public function reviews()
+    {
+        $reviews = $this->reviewRepository->getAllWithRelations();
+        return view('admin.reviews', compact('reviews'));
+    }
+
+    public function deleteReview($id)
+    {
+        $this->reviewRepository->deleteById($id);
+        return redirect()->route('admin.reviews')->with('success', 'Review deleted successfully.');
     }
 }

@@ -5,7 +5,6 @@ namespace App\Repositories;
 use App\Models\Order;
 use App\Models\Review;
 use App\Interfaces\ReviewRepositoryInterface;
-use App\Interfaces\CategoryRepositoryInterface;
 
 
 class ReviewRepository implements ReviewRepositoryInterface
@@ -24,4 +23,19 @@ class ReviewRepository implements ReviewRepositoryInterface
             ->with(['service', 'package'])
             ->get();
     }
+
+    public function getAllWithRelations()
+    {
+        return Review::with(['user', 'service', 'signals'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+
+    public function deleteById($id)
+    {
+        $review = Review::findOrFail($id);
+        return $review->delete();
+    }
+
+
 }
