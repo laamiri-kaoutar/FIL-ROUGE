@@ -9,11 +9,9 @@ interface ServiceRepositoryInterface
     public function addPackages(int $serviceId, array $packages);
     public function find(int $id);
     public function all(?string $query = null, ?int $categoryId = null, ?float $minPrice = null, ?float $maxPrice = null, ?string $sort = 'recommended');
-    // public function all();
     public function getByUserId(int $userId);
     public function delete(int $id);
 
-    // these are all for updating the srvice and it's related infos 
     public function update(int $id, array $data);
     public function deleteImage(int $imageId);
     public function createPackage(int $serviceId, array $data);
@@ -23,4 +21,7 @@ interface ServiceRepositoryInterface
     public function deleteFeature(int $featureId);
     public function getByUserIdWithFilter(int $userId, ?string $query = null);
     public function updateRating(int $serviceId);
+    public function getAllWithFilters($search = null, $status = null,$category_id = null, $perPage = 10);
+    public function getServicesByCategory($status = null);
+    public function getServiceStatusDistribution();
 }
