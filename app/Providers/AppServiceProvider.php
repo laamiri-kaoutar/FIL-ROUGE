@@ -31,6 +31,10 @@ class AppServiceProvider extends ServiceProvider
             \App\Interfaces\SignalRepositoryInterface::class,
             \App\Repositories\SignalRepository::class
         );
+        $this->app->bind(
+            \App\Interfaces\UserRepositoryInterface::class,
+            \App\Repositories\UserRepository::class
+        );
     }
 
     /**
