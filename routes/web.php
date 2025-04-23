@@ -145,6 +145,8 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::post('/users/{id}/ban', [AdminController::class, 'banUser'])->name('admin.users.ban');
     Route::post('/users/{id}/unban', [AdminController::class, 'unbanUser'])->name('admin.users.unban');
     Route::delete('/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.users.delete');
+    Route::get('/orders', [AdminController::class, 'orders'])->name('admin.orders');
+    Route::get('/orders/export', [AdminController::class, 'exportOrders'])->name('admin.orders.export');
 });
 
 
