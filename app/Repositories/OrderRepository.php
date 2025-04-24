@@ -59,19 +59,62 @@ class OrderRepository implements OrderRepositoryInterface
     }
 
     public function getOrdersOverTime($days = 30)
-{
-    return Order::selectRaw('DATE(created_at) as date')
-        ->selectRaw('COUNT(*) as order_count')
-        ->where('created_at', '>=', now()->subDays($days))
-        ->groupBy('date')
-        ->orderBy('date', 'asc')
-        ->get();
-}
+    {
+        return Order::selectRaw('DATE(created_at) as date')
+            ->selectRaw('COUNT(*) as order_count')
+            ->where('created_at', '>=', now()->subDays($days))
+            ->groupBy('date')
+            ->orderBy('date', 'asc')
+            ->get();
+    }
 
-public function getTotalRevenue()
-{
-    return Order::where('status', 'completed')->sum('amount');
-}
+    public function getTotalRevenue()
+    {
+        return Order::sum('amount');
+    }
+
+
+    public function countPendingOrdersForFreelancer($freelancerId)
+    {
+        return Order::whereHas('service', function ($query) use ($freelancerId) {
+            $query->where('user_id', $freelancerId);
+        })->where('status', 'pending')->count();
+    }
+
+    public function getLastTransactionForFreelancer($freelancerId)
+    {
+        return Order::whereHas('service', function ($query) use ($freelancerId) {
+            $query->where('user_id', $freelancerId);
+        })->where('status', 'completed')->latest()->first();
+    }
+
+    public function getTotalEarningsForFreelancer($freelancerId)
+    {
+        return Order::whereHas('service', function ($query) use ($freelancerId) {
+            $query->where('user_id', $freelancerId);
+        })->where('status', 'completed')->sum('amount');
+    }
+
+    public function getRecentOrdersForFreelancer($freelancerId, $limit = 3)
+    {
+        return Order::whereHas('service', function ($query) use ($freelancerId) {
+            $query->where('user_id', $freelancerId);
+        })->latest()->take($limit)->get();
+    }
+
+    public function getEarningsOverTimeForFreelancer($freelancerId, $days = 30)
+    {
+        return Order::selectRaw('DATE(created_at) as date')
+            ->selectRaw('SUM(amount) as total_amount')
+            ->whereHas('service', function ($query) use ($freelancerId) {
+                $query->where('user_id', $freelancerId);
+            })
+            // ->where('status', 'completed')
+            ->where('created_at', '>=', now()->subDays($days))
+            ->groupBy('date')
+            ->orderBy('date', 'asc')
+            ->get();
+    }
 
 
 }
