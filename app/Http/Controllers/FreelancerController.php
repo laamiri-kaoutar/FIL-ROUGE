@@ -21,36 +21,15 @@ class FreelancerController extends Controller
     {
         $user = Auth::user();
 
-        // Stats Cards Data
         $activeServicesCount = $user->services()->where('status', 'active')->count();
-        $pendingOrdersCount = Order::whereHas('service', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
-        })->where('status', 'pending')->count();
-        $lastTransaction = Order::whereHas('service', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
-        })->where('status', 'completed')->latest()->first();
-        $totalEarnings = Order::whereHas('service', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
-        })->where('status', 'completed')->sum('amount');
+        $pendingOrdersCount = $this->orderRepository->countPendingOrdersForFreelancer($user->id);
+        $lastTransaction = $this->orderRepository->getLastTransactionForFreelancer($user->id);
+        $totalEarnings = $this->orderRepository->getTotalEarningsForFreelancer($user->id);
 
-        // Service Overview Data
         $activeServices = $user->services()->where('status', 'active')->take(3)->get();
-        $recentOrders = Order::whereHas('service', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
-        })->latest()->take(3)->get();
+        $recentOrders = $this->orderRepository->getRecentOrdersForFreelancer($user->id);
 
-        // Earnings Over Time (last 30 days)
-        $earningsOverTime = Order::selectRaw('DATE(created_at) as date')
-            ->selectRaw('SUM(amount) as total_amount')
-            ->whereHas('service', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })
-            // ->where('status', 'completed')
-            ->where('created_at', '>=', now()->subDays(30))
-            ->groupBy('date')
-            ->orderBy('date', 'asc')
-            ->get();
-
+        $earningsOverTime = $this->orderRepository->getEarningsOverTimeForFreelancer($user->id);
         return view('freelancer.dashboard', compact(
             // 'user',
             'activeServicesCount',
