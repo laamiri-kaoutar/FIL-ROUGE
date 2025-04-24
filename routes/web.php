@@ -68,10 +68,6 @@ Route::get('/client/dashboard', function () {
 
 
 
-// freelancer routes
-Route::get('/freelancer/dashboard', function () {
-    return view('freelancer.dashboard');
-})->name('freelancer.dashboard');
 
 Route::get('/freelancer/transactions', function () {
     return view('freelancer.transactions');
@@ -101,6 +97,8 @@ Route::prefix('freelancer')->middleware(['auth', 'freelancer'])->group(function 
     Route::delete('/services/{id}', [ServiceController::class, 'destroy'])->name('services.destroy');
     Route::get('/orders', [FreelancerController::class, 'orders'])->name('freelancer.orders');
     Route::post('/orders/{id}/update-status', [FreelancerController::class, 'updateOrderStatus'])->name('freelancer.orders.update-status');
+    Route::get('/dashboard', [FreelancerController::class, 'dashboard'])->name('freelancer.dashboard');
+
     
 });
 
