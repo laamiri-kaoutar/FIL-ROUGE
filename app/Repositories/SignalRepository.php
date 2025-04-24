@@ -10,8 +10,9 @@ class SignalRepository implements SignalRepositoryInterface
     public function getAllWithRelations()
     {
         return Signal::with(['review.user', 'review.service', 'user'])
+            // ->selectRaw('review_id')
             ->orderBy('created_at', 'desc')
-            ->groupBy('review_id')
+            // ->groupBy('review_id')
             ->get();
     }
 

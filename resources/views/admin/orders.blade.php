@@ -102,6 +102,8 @@
                             var searchTerm = this.value.trim();
                             if (searchTerm) {
                                 window.location.href = '/admin/orders?search=' + encodeURIComponent(searchTerm);
+                            }else {
+                                window.location.href = '/admin/orders';
                             }
                         }
                     });

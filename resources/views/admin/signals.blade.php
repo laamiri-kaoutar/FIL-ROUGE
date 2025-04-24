@@ -96,7 +96,6 @@
 
     @section('scripts')
         <script>
-            // Auto-hide success/error messages after 5 seconds
             document.addEventListener('DOMContentLoaded', function () {
                 const successMessage = document.getElementById('success-message');
                 const errorMessage = document.getElementById('error-message');

@@ -65,11 +65,11 @@
                         </svg>
                         Orders
                     </a>
-                    <a href="{{ route('admin.transactions') }}" class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100 @if(Route::is('admin.transactions')) bg-gradient-to-r from-purple-100/50 to-pink-100/50 border-r-4 border-pink-500 @endif">
+                    <a href="{{ route('admin.services') }}" class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100 @if(Route::is('admin.services')) bg-gradient-to-r from-purple-100/50 to-pink-100/50 border-r-4 border-pink-500 @endif">
                         <svg class="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                         </svg>
-                        Transactions
+                        Services
                     </a>
                     <a href="{{ route('admin.tags') }}" class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100 @if(Route::is('admin.tags')) bg-gradient-to-r from-purple-100/50 to-pink-100/50 border-r-4 border-pink-500 @endif">
                         <svg class="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

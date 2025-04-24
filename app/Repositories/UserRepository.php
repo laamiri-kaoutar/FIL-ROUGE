@@ -24,6 +24,7 @@ class UserRepository implements UserRepositoryInterface
 
         return $query->orderBy('created_at', 'desc')->paginate($perPage);
     }
+    
 
     public function updateStatus($userId, $status)
     {
@@ -33,4 +34,19 @@ class UserRepository implements UserRepositoryInterface
 
         return $user;
     }
+
+    public function countFreelancers()
+{
+    return User::whereHas('services')->count();
+}
+
+public function countClients()
+{
+    return User::whereHas('orders')->count();
+}
+
+public function countUsersInBothRoles()
+{
+    return User::whereHas('services')->whereHas('orders')->count();
+}
 }

@@ -58,5 +58,20 @@ class OrderRepository implements OrderRepositoryInterface
         return $query->orderBy('created_at', 'desc')->paginate($perPage);
     }
 
+    public function getOrdersOverTime($days = 30)
+{
+    return Order::selectRaw('DATE(created_at) as date')
+        ->selectRaw('COUNT(*) as order_count')
+        ->where('created_at', '>=', now()->subDays($days))
+        ->groupBy('date')
+        ->orderBy('date', 'asc')
+        ->get();
+}
+
+public function getTotalRevenue()
+{
+    return Order::where('status', 'completed')->sum('amount');
+}
+
 
 }
