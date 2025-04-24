@@ -10,14 +10,17 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FreelancerController;
 
-Route::get('/', function () {
-    // return view('welcome');
-    return view('home');
+// Route::get('/', function () {
+//     // return view('welcome');
+//     return view('home');
 
-})->name('home');
+// })->name('home');
+
+Route::get('/', [WelcomeController::class, 'index'])->name('home');
 
 Route::get('/test', function () {
     // $data = ServicePackage::All();
@@ -59,14 +62,6 @@ Route::post('/forgot-password', [AuthController::class, 'sendResetLinkEmail'])->
 Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [AuthController::class, 'reset'])->name('password.update');
 // Clinets routes : 
-
-
-
-Route::get('/client/dashboard', function () {
-    return view('client.dashboard');
-})->name('client.dashboard');
-
-
 
 
 Route::get('/freelancer/transactions', function () {
@@ -119,6 +114,7 @@ Route::prefix('client')->middleware(['auth'])->group(function () {
     Route::get('/reviews', [ClientController::class, 'reviews'])->name('client.reviews');
     Route::get('/favorites', [ClientController::class, 'favorites'])->name('client.favorites');
     Route::post('/reviews/{id}/report', [ReviewController::class, 'report'])->name('client.reviews.report');
+    Route::get('/dashboard', [ClientController::class, 'dashboard'])->name('client.dashboard');
 });
 
 Route::middleware(['auth'])->group(function () {
