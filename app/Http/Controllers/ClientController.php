@@ -8,6 +8,7 @@ use App\Models\Favorite;
 use Illuminate\Http\Request;
 use App\Services\InvoiceService;
 use App\Services\PaymentService;
+use Illuminate\Support\Facades\Auth;
 use App\Repositories\OrderRepository;
 use App\Repositories\ServiceRepository;
 use App\Interfaces\ReviewRepositoryInterface;
@@ -32,6 +33,42 @@ class ClientController extends Controller
         $this->paymentService = $paymentService;
         $this->invoiceService = $invoiceService;
         $this->reviewRepository = $reviewRepository;
+    }
+
+    public function dashboard()
+    {
+        $user = Auth::user();
+
+        $activeOrdersCount = $user->orders()
+            ->whereIn('status', ['pending', 'in_progress'])
+            ->count();
+        $totalSpent = $user->orders()
+            // ->where('status', 'completed')
+            ->sum('amount');
+        $lastPayment = $user->orders()
+            // ->where('status', 'completed') 
+            ->latest()
+            ->first();
+
+        $recentOrders = $user->orders()->latest()->take(3)->get();
+
+        $recommendedServices = $this->serviceRepository->getTopRatedServices(3);
+
+        $orderStatusDistribution = $this->orderRepository->getOrderStatusDistributionForClient($user->id);
+        
+
+        $showGettingStarted = $user->orders()->count() === 0;
+
+        return view('client.dashboard', compact(
+            'user',
+            'activeOrdersCount',
+            'totalSpent',
+            'lastPayment',
+            'recentOrders',
+            'recommendedServices',
+            'orderStatusDistribution',
+            'showGettingStarted'
+        ));
     }
 
     public function services(Request $request)
