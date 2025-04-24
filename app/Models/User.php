@@ -57,4 +57,18 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Service::class, 'favorites', 'user_id', 'service_id');
     }
+
+     // the services created by the freelancer
+
+    public function services()
+    {
+        return $this->hasMany(Service::class);
+    }
+
+   
+    // the orders placed by the client
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }
