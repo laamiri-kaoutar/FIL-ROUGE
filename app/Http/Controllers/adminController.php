@@ -37,7 +37,7 @@ class adminController extends Controller
     $status = $request->input('status', 'All Statuses');
 
     // Summary Cards Data
-    $totalUsers = $this->userRepository->getAll()->count();
+    $totalUsers = $this->userRepository->countUsersInBothRoles();
     $freelancers = $this->userRepository->countFreelancers();
     $clients = $this->userRepository->countClients();
     $usersInBothRoles = $this->userRepository->countUsersInBothRoles();
@@ -55,7 +55,7 @@ class adminController extends Controller
     $serviceStatusDistribution = $this->serviceRepository->getServiceStatusDistribution();
     $ordersOverTime = $this->orderRepository->getOrdersOverTime();
 
-    return view('admin.dashboard.index', compact(
+    return view('admin.dashboard', compact(
         'totalUsers', 'freelancers', 'clients', 'usersInBothRoles',
         'totalServices', 'activeServices', 'inactiveServices',
         'totalOrders', 'pendingOrders', 'inProgressOrders', 'completedOrders', 'totalRevenue',
