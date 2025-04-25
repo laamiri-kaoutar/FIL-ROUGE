@@ -266,7 +266,7 @@ class ClientController extends Controller
     {
         $favorites = auth()->user()->favorites()
             ->with(['user', 'category', 'tags', 'reviews'])
-            ->get();
+            ->paginate(6);
     
         return view('client.favorites', compact('favorites'));
     }

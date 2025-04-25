@@ -36,17 +36,17 @@ class UserRepository implements UserRepositoryInterface
     }
 
     public function countFreelancers()
-{
-    return User::whereHas('services')->count();
-}
+    {
+        return User::whereHas('services')->count();
+    }
 
-public function countClients()
-{
-    return User::whereHas('orders')->count();
-}
+    public function countClients()
+    {
+        return User::whereHas('orders')->count();
+    }
 
-public function countUsersInBothRoles()
-{
-    return User::whereHas('services')->whereHas('orders')->count();
-}
+    public function countUsersInBothRoles()
+    {
+        return User::whereHas('services')->orWhereHas('orders')->count();
+    }
 }

@@ -169,24 +169,35 @@ class ServiceRepository implements ServiceRepositoryInterface
     }
 
     public function getServicesByCategory($status = null)
-{
-    $query = Service::select('categories.name as category_name')
-        ->selectRaw('COUNT(services.id) as service_count')
-        ->join('categories', 'services.category_id', '=', 'categories.id')
-        ->groupBy('categories.name');
+    {
+        $query = Service::select('categories.name as category_name')
+            ->selectRaw('COUNT(services.id) as service_count')
+            ->join('categories', 'services.category_id', '=', 'categories.id')
+            ->groupBy('categories.name');
 
-    if ($status && $status !== 'All Statuses') {
-        $query->where('services.status', $status);
+        if ($status && $status !== 'All Statuses') {
+            $query->where('services.status', $status);
+        }
+
+        return $query->get();
     }
 
-    return $query->get();
-}
+    public function getServiceStatusDistribution()
+    {
+        return Service::select('status')
+            ->selectRaw('COUNT(*) as count')
+            ->groupBy('status')
+            ->get();
+    }
 
-public function getServiceStatusDistribution()
-{
-    return Service::select('status')
-        ->selectRaw('COUNT(*) as count')
-        ->groupBy('status')
-        ->get();
-}
+    public function getTopRatedServices($limit = 3)
+    {
+        return Service::where('status', 'active')
+            ->orderBy('rating', 'desc')
+            ->take($limit)
+            ->get();
+    }
+
+    
+
 }

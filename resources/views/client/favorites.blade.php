@@ -64,6 +64,10 @@
                     </div>
                 @endforeach
             </div>
+
+            <div class="px-6 py-4">
+                {{ $favorites->links() }}
+            </div>
         @else
             <!-- Empty State -->
             <div id="empty-state" class="bg-white rounded-lg shadow-md p-8 text-center max-w-md mx-auto">

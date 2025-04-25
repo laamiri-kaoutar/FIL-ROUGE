@@ -91,6 +91,9 @@
                             </div>
                         @endforeach
                     </div>
+                    <div class="px-6 py-4">
+                        {{ $orders->links() }}
+                    </div>
                 </div>
             @else
                 <!-- Empty State - No Orders -->

@@ -98,7 +98,7 @@ Route::prefix('freelancer')->middleware(['auth', 'freelancer'])->group(function 
 });
 
 
-Route::prefix('client')->middleware(['auth'])->group(function () {
+Route::prefix('client')->middleware(['auth' , 'client'])->group(function () {
     Route::get('/services', [ClientController::class, 'services'])->name('client.services');
     Route::get('/services/{id}', [ClientController::class, 'show'])->name('client.services.show');
     Route::post('/services/{id}/favorite', [ClientController::class, 'toggleFavorite'])->name('client.services.favorite');

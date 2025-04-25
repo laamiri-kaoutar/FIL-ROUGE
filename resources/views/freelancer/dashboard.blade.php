@@ -1,3 +1,6 @@
+@php
+    $showSearch = false;
+@endphp
 @extends('layouts.app')
 
 @section('title', 'Freelancer Dashboard - FreelanceHub')

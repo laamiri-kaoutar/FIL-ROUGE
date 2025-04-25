@@ -13,7 +13,7 @@ class ReviewRepository implements ReviewRepositoryInterface
     {
         return Review::where('user_id', $userId)
             ->with(['service'])
-            ->get();
+            ->paginate(4);
     }
 
     public function getCompletedOrdersWithoutReviews($userId)

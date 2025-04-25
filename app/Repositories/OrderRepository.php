@@ -20,7 +20,7 @@ class OrderRepository implements OrderRepositoryInterface
 
     public function getUserOrders()
     {
-        return Order::where('user_id','=', Auth::id())->with(['service.user', 'package'])->get();
+        return Order::where('user_id','=', Auth::id())->with(['service.user', 'package'])->paginate(4);
     }
 
     public function getFreelancerOrders($freelancerId)
@@ -113,6 +113,16 @@ class OrderRepository implements OrderRepositoryInterface
             ->where('created_at', '>=', now()->subDays($days))
             ->groupBy('date')
             ->orderBy('date', 'asc')
+            ->get();
+    }
+
+
+
+    public function getOrderStatusDistributionForClient($clientId)
+    {
+        return Order::selectRaw('status, COUNT(*) as count')
+            ->where('user_id', $clientId)
+            ->groupBy('status')
             ->get();
     }
 

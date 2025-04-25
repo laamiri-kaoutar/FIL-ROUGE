@@ -118,8 +118,12 @@
         <div class="mt-12 flex justify-center gap-4">
             {{-- {{ $services->appends(request()->query())->links('vendor.pagination.tailwind') }} --}}
            
-                {{ $services->appends(request()->query())->links() }}
+                {{-- {{ $services->appends(request()->query())->links() }} --}}
         
+        </div>
+
+        <div class="px-6 py-4">
+            {{ $services->links() }}
         </div>
 
     </main>

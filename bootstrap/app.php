@@ -14,6 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'freelancer' => \App\Http\Middleware\FreelancerMiddleware::class,
+            'client' => \App\Http\Middleware\ClientMiddleware::class,
+
 
             // 'artist' => \App\Http\Middleware\ArtistMiddleware::class,
             // 'listner' => \App\Http\Middleware\ListnerMiddleware::class,

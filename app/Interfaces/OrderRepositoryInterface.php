@@ -10,5 +10,7 @@ interface OrderRepositoryInterface
     public function getAllWithFilters($search = null, $status = null, $perPage = 10);
     public function getOrdersOverTime($days = 30);
     public function getTotalRevenue();
+    public function getOrderStatusDistributionForClient($clientId);
+
 
 }

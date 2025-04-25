@@ -24,4 +24,5 @@ interface ServiceRepositoryInterface
     public function getAllWithFilters($search = null, $status = null,$category_id = null, $perPage = 10);
     public function getServicesByCategory($status = null);
     public function getServiceStatusDistribution();
+    public function getTopRatedServices($limit = 3);
 }
