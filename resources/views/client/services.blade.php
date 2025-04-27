@@ -2,10 +2,6 @@
 
 @section('title', 'Explore Services - FreelanceHub')
 
-@section('styles')
-    <link rel="stylesheet" href="{{ asset('css/client-services.css') }}">
-@endsection
-
 @section('content')
     <main class="max-w-7xl mx-auto px-4 py-12">
         <!-- Page Header -->
@@ -49,8 +45,6 @@
         </div>
 
         <!-- Services Grid -->
-       
-        
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse ($services as $service)
                 <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100">
@@ -98,33 +92,23 @@
                             </div>
                         </div>
                         
-                        {{-- <div class="mt-4 flex justify-end space-x-2">
-                            <div class="flex justify-end items-center border-t pt-4">
-                                <a href="{{ route('client.services.show', $service->id) }}" class="text-purple-600 hover:text-purple-800 font-semibold">View Details</a>
-                            </div>
-                        </div> --}}
                         <div class="flex justify-end items-center border-t pt-3 mt-3">
-                            <a href="{{ route('client.services.show', $service->id) }}" class="text-purple-600 hover:text-purple-800 font-semibold">View Details</a>
+                            @auth
+                                <a href="{{ route('client.services.show', $service->id) }}" class="text-purple-600 hover:text-purple-800 font-semibold">View Details</a>
+                            @else
+                                <a href="{{ route('register') }}?redirect_to={{ route('client.services.show', $service->id) }}" class="text-purple-600 hover:text-purple-800 font-semibold">Register to View Details</a>
+                            @endauth
                         </div>
-                        
                     </div>
                 </div>
             @empty
-                <p class="text-gray-600">You have no services yet.</p>
+                <p class="text-gray-600">No services found matching your criteria.</p>
             @endforelse
         </div>
 
         <!-- Enhanced Pagination -->
-        <div class="mt-12 flex justify-center gap-4">
-            {{-- {{ $services->appends(request()->query())->links('vendor.pagination.tailwind') }} --}}
-           
-                {{-- {{ $services->appends(request()->query())->links() }} --}}
-        
+        <div class="mt-12 flex justify-center">
+            {{ $services->appends(request()->query())->links() }}
         </div>
-
-        <div class="px-6 py-4">
-            {{ $services->links() }}
-        </div>
-
     </main>
 @endsection

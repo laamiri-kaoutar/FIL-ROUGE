@@ -72,9 +72,14 @@
                                             Start
                                         </button>
                                     </form>
-                                    <a href="{{ route('chat') }}" class="text-center bg-white border border-primary text-primary rounded-md py-2 text-sm font-medium hover:bg-gray-50 transition-colors">
-                                        Message Client
-                                    </a>
+                                    <form action="{{ route('conversation.start') }}" method="POST" class="text-center">
+                                        @csrf
+                                        <input type="hidden" name="client_id" value="{{ $order->client_id }}">
+                                        <input type="hidden" name="freelancer_id" value="{{ auth()->id() }}">
+                                        <button type="submit" class="bg-white border border-primary text-primary rounded-md py-2 text-sm font-medium hover:bg-gray-50 transition-colors w-full">
+                                            Message Client
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         @endforeach
@@ -115,7 +120,7 @@
                                             Complete
                                         </button>
                                     </form>
-                                    <a href="{{ route('chat') }}" class="text-center bg-white border border-primary text-primary rounded-md py-2 text-sm font-medium hover:bg-gray-50 transition-colors">
+                                    <a href="{{ route('chat.index') }}" class="text-center bg-white border border-primary text-primary rounded-md py-2 text-sm font-medium hover:bg-gray-50 transition-colors">
                                         Message Client
                                     </a>
                                 </div>
@@ -158,7 +163,7 @@
                                             Restart
                                         </button>
                                     </form>
-                                    <a href="{{ route('chat') }}" class="text-center bg-white border border-primary text-primary rounded-md py-2 text-sm font-medium hover:bg-gray-50 transition-colors">
+                                    <a href="{{ route('chat.index') }}" class="text-center bg-white border border-primary text-primary rounded-md py-2 text-sm font-medium hover:bg-gray-50 transition-colors">
                                         Message Client
                                     </a>
                                 </div>

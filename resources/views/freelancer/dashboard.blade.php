@@ -139,7 +139,7 @@
                 </a>
 
                 <!-- Client Communication -->
-                <a href="{{ route('chat') }}" class="bg-white rounded-lg shadow-sm p-6 border border-gray-100 hover:shadow-md transition group">
+                <a href="{{ route('chat.index') }}" class="bg-white rounded-lg shadow-sm p-6 border border-gray-100 hover:shadow-md transition group">
                     <div class="flex items-center">
                         <div class="rounded-full p-3 bg-gray-100 group-hover:bg-purple-100">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 group-hover:text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -263,7 +263,7 @@
                                     <div class="flex justify-between items-center">
                                         <span class="text-sm text-gray-500">From: {{ $order->user->name ?? 'N/A' }}</span>
                                         <div>
-                                            <a href="{{ route('chat') }}" class="px-3 py-1 text-xs font-medium rounded bg-purple-600 text-white hover:bg-purple-700">Message</a>
+                                            <a href="{{ route('chat.index') }}" class="px-3 py-1 text-xs font-medium rounded bg-purple-600 text-white hover:bg-purple-700">Message</a>
                                         </div>
                                     </div>
                                 </div>

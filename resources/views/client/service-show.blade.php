@@ -1,3 +1,6 @@
+@php
+    $showSearch = false;
+@endphp
 @extends('layouts.app')
 
 @section('title', '{{ $service->title }} - FreelanceHub')
@@ -62,12 +65,14 @@
                 <div>
                     <div class="bg-white rounded-lg shadow-sm p-6">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Contact Freelancer</h3>
-                        <button class="w-full py-3 px-4 text-sm font-medium text-purple-600 bg-purple-50 hover:bg-purple-100 rounded mb-4" disabled>
-                            Message {{ $service->user->name }}
-                        </button>
-                        <p class="text-sm text-gray-600">
-                            Messaging functionality coming soon. Stay tuned!
-                        </p>
+                        <form action="{{ route('conversation.start') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="client_id" value="{{ auth()->id() }}">
+                            <input type="hidden" name="freelancer_id" value="{{ $service->user_id }}">
+                            <button type="submit" class="w-full py-3 px-4 text-sm font-medium text-purple-600 bg-purple-50 hover:bg-purple-100 rounded mb-4">
+                                Message {{ $service->user->name }}
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -116,7 +121,7 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-600 mt-0.5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                     </svg>
-                                    <span>{{ $feature->name }}</span>
+                                    <span>{{ $feature->description }}</span>
                                 </div>
                             @endforeach
                         </div>

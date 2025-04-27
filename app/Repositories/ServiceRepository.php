@@ -36,6 +36,7 @@ class ServiceRepository implements ServiceRepositoryInterface
 
     public function all(?string $query = null, ?int $categoryId = null, ?float $minPrice = null, ?float $maxPrice = null, ?string $sort = 'recommended')
     {
+        
         $builder = Service::with(['images', 'packages.features', 'tags']);
 
         // Search filter
@@ -66,7 +67,7 @@ class ServiceRepository implements ServiceRepositoryInterface
             $builder->orderBy('rating', 'desc');
         }
 
-        return $builder->paginate(6);
+        return $builder->paginate(3);
     }
 
     public function getByUserId(int $userId)

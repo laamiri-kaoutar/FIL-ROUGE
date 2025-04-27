@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('name');
             $table->enum('package_type', ['basic', 'standard', 'premium']);
             $table->float('price');
-            // $table->integer('revisions');
             $table->text('description')->nullable();
             $table->integer('delivery_time');
             $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');

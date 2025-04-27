@@ -8,5 +8,8 @@ class Feature extends Model
 {
     protected $fillable = ['service_package_id', 'description', 'is_included'];
 
-    
+    public function package()
+    {
+        return $this->belongsTo(Package::class);
+    }
 }

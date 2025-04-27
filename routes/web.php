@@ -5,6 +5,7 @@ use App\Models\ServicePackage;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ReviewController;
@@ -38,11 +39,6 @@ Route::get('/test', function () {
 
 })->name('test');
 
-Route::get('/chat', function () {
-    // return view('welcome');
-    return view('chat');
-
-})->name('chat');
 
 
 Route::get('/password-request', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
@@ -99,8 +95,7 @@ Route::prefix('freelancer')->middleware(['auth', 'freelancer'])->group(function 
 
 
 Route::prefix('client')->middleware(['auth' , 'client'])->group(function () {
-    Route::get('/services', [ClientController::class, 'services'])->name('client.services');
-    Route::get('/services/{id}', [ClientController::class, 'show'])->name('client.services.show');
+    Route::get('/services/{id}', [ServiceController::class, 'show'])->name('client.services.show');
     Route::post('/services/{id}/favorite', [ClientController::class, 'toggleFavorite'])->name('client.services.favorite');
     Route::post('/services/{id}/review', [ClientController::class, 'storeReview'])->name('client.services.review');
     Route::get('/services/{service_id}/reviews/{review_id}/edit', [ClientController::class, 'editReview'])->name('client.services.reviews.edit');
@@ -117,9 +112,17 @@ Route::prefix('client')->middleware(['auth' , 'client'])->group(function () {
     Route::get('/dashboard', [ClientController::class, 'dashboard'])->name('client.dashboard');
 });
 
+Route::get('/services', [ServiceController::class, 'services'])->name('client.services');
+
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/chat/{conversation?}', [ChatController::class, 'index'])->name('chat.index');
+    Route::post('/conversation/start', [ChatController::class, 'startConversation'])->name('conversation.start');
+    Route::get('/conversations', [ChatController::class, 'getConversations'])->name('conversations.get');
+    Route::get('/conversations/{conversation}/messages', [ChatController::class, 'getMessages'])->name('messages.get');
+    Route::post('/conversations/{conversation}/messages', [ChatController::class, 'sendMessage'])->name('messages.send');
 });
 
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {

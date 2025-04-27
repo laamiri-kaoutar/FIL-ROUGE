@@ -20,12 +20,35 @@ class ServiceController extends Controller
     public function freelancerServices(Request $request)
     {
         $query = $request->input('query');
+        // dd($query);
         $services = $this->serviceRepository->getByUserIdWithFilter(Auth::id(), $query);
     
         $tags = Tag::all();
         $categories = Category::all();
     
         return view('freelancer.services', compact('services', 'tags', 'categories'));
+    }
+
+    public function services(Request $request)
+    {
+        $query = $request->input('query');
+        // dd($query);
+        $category = $request->input('category');
+        $sort = $request->input('sort', 'recommended');
+        $minPrice = $request->input('min_price');
+        $maxPrice = $request->input('max_price');
+
+        $services = $this->serviceRepository->all($query, $category ? (int)$category : null, $minPrice ? (float)$minPrice : null, $maxPrice ? (float)$maxPrice : null, $sort);
+        $categories = Category::all();
+
+        return view('client.services', compact('services', 'categories'));
+    }
+
+    
+    public function show($id)
+    {
+        $service = $this->serviceRepository->find($id);
+        return view('client.service-show', compact('service'));
     }
     
    

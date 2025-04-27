@@ -13,6 +13,12 @@
     <link rel="stylesheet" href="{{ asset('css/base.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/navbar.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/footer.css') }}">
+    <script src="https://js.pusher.com/8.2/pusher.min.js"></script>
+
+    @vite(['resources/js/app.js'])
+
+    {{-- <meta name="api-token" content="{{ auth()->check() ? auth()->user()->createToken('api-token')->plainTextToken : '' }}"> --}}
+<meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         body {
             background-color: #f0f0f0;
