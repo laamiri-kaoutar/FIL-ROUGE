@@ -45,7 +45,7 @@
                                 </div>
                                 <div>
                                     <h2 class="font-semibold text-gray-800">{{ $conversation->getOtherParticipant(auth()->id())->name }}</h2>
-                                    <p class="text-xs text-gray-500">{{ $conversation->getOtherParticipant(auth()->id())->role->name }}</p>
+                                    <p class="text-xs text-gray-500">{{ $conversation->getOtherParticipant(auth()->id())->role }}</p>
                                 </div>
                             </div>
                         </div>
@@ -92,6 +92,7 @@
         const messageForm = document.getElementById('message-form');
         const messageInput = messageForm ? messageForm.querySelector('.chat-input') : null;
         const currentConversationId = {{ $conversation ? $conversation->id : 'null' }};
+        const currentUserId = {{ auth()->id() }};
 
         // Load conversations
         function loadConversations() {
@@ -105,7 +106,7 @@
             .then(data => {
                 conversationsList.innerHTML = '';
                 data.forEach(conversation => {
-                    const otherUser = conversation.client_id == {{ auth()->id() }} ? conversation.freelancer : conversation.client;
+                    const otherUser = conversation.client_id == currentUserId ? conversation.freelancer : conversation.client;
                     const latestMessage = conversation.messages[0] || null;
                     const isActive = currentConversationId && currentConversationId == conversation.id;
 
@@ -155,10 +156,10 @@
             .then(messages => {
                 messagesContainer.innerHTML = '';
                 messages.forEach(message => {
-                    const isSent = message.sender_id == {{ auth()->id() }};
-                    const div = document.createElement('div');
-                    div.className = `flex mb-5 ${isSent ? 'justify-end' : ''}`;
-                    div.innerHTML = `
+                    const isSent = message.sender_id == currentUserId;
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `flex mb-5 ${isSent ? 'justify-end' : ''}`;
+                    messageDiv.innerHTML = `
                         ${!isSent ? `
                             <div class="flex-shrink-0 mr-3 self-end">
                                 <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 text-xs font-semibold">
@@ -175,7 +176,7 @@
                             </p>
                         </div>
                     `;
-                    messagesContainer.appendChild(div);
+                    messagesContainer.appendChild(messageDiv);
                 });
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             })
@@ -186,8 +187,8 @@
         if (messageForm) {
             messageForm.addEventListener('submit', function (e) {
                 e.preventDefault();
-                const content = messageInput.value.trim();
-                if (!content) return;
+                const messageText = messageInput.value.trim();
+                if (!messageText) return;
 
                 fetch(`/conversations/${currentConversationId}/messages`, {
                     method: 'POST',
@@ -196,18 +197,76 @@
                         'Accept': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
-                    body: JSON.stringify({ content })
+                    body: JSON.stringify({ content: messageText })
                 })
                 .then(response => response.json())
-                .then(message => {
+                .then(data => {
                     messageInput.value = '';
-                    loadMessages();
+                    // Message will be added via Echo, no need to reload
                 })
                 .catch(error => console.log('Error:', error));
             });
         }
 
-        // Load data on page load
+        setTimeout(() => {
+            if (currentUserId) {
+                console.log('Current User ID:', currentUserId);
+                console.log('Current Conversation ID:', currentConversationId);
+                console.log('Echo instance:', window.Echo);
+
+                // Subscribe to the public channel
+                const channel = window.Echo.channel(`public-chat.${currentUserId}`);
+                console.log(`Subscribed to channel: public-chat.${currentUserId}`);
+
+                // Listen for the MessageSent event
+                channel.listen('.MessageSent', (e) => {
+                    console.log('Received MessageSent event:', e);
+                    const message = e.message;
+                    const isSent = message.sender_id == currentUserId;
+
+                    // Only append the message if it belongs to the current conversation
+                    if (message.conversation_id == currentConversationId) {
+                        console.log('Message belongs to current conversation, appending to UI');
+                        const messageDiv = document.createElement('div');
+                        messageDiv.className = `flex mb-5 ${isSent ? 'justify-end' : ''}`;
+                        messageDiv.innerHTML = `
+                            ${!isSent ? `
+                                <div class="flex-shrink-0 mr-3 self-end">
+                                    <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 text-xs font-semibold">
+                                        ${message.sender.name.substring(0, 2).toUpperCase()}
+                                    </div>
+                                </div>
+                            ` : ''}
+                            <div class="max-w-[75%]">
+                                <div class="${isSent ? 'message-sent' : 'message-received'} p-4">
+                                    <p>${message.content}</p>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1 ${isSent ? 'text-right mr-1' : 'ml-1'}">
+                                    ${new Date(message.created_at).toLocaleTimeString()}
+                                </p>
+                            </div>
+                        `;
+                        messagesContainer.appendChild(messageDiv);
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    } else {
+                        console.log('Message does not belong to current conversation:', message.conversation_id);
+                    }
+
+                    // Reload conversations to update the latest message preview
+                    console.log('Reloading conversations');
+                    loadConversations();
+                }).subscribed(() => {
+                    console.log(`Successfully subscribed to public-chat.${currentUserId}`);
+                }).error((error) => {
+                    console.error(`Subscription error for public-chat.${currentUserId}:`, error);
+                });
+            } else {
+                console.error('Current User ID is not defined');
+            }
+        }, 500);
+
+
+        // Load initial data
         loadConversations();
         loadMessages();
     </script>
